@@ -1,0 +1,2463 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UNODC COBOL 2025 | Executive Workplan Dashboard (Storytelling with Data)</title>
+  <!-- Tipografía corporativa limpia inspirada en normas UNODC (Inter) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <!-- Librería Chart.js y plugin DataLabels -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
+
+  <style>
+    :root {
+      --un-cyan: #009EDB;
+      --un-blue-dark: #005BBB;
+      --un-navy: #0B2545;
+      --un-navy-soft: #133B6E;
+      --un-light-bg: #F1F5F9;
+      --card-bg: #FFFFFF;
+      --card-bg-alt: #F8FAFC;
+      --text-main: #0F172A;
+      --text-muted: #475569;
+      --text-light: #64748B;
+      --border-subtle: #E2E8F0;
+      --border-focus: #93C5FD;
+      /* Colores Preatentivos (Storytelling with Data) */
+      --swd-grey: #94A3B8;
+      --swd-grey-light: #CBD5E1;
+      --swd-blue-focus: #0077B6;
+      --swd-teal-success: #0D9488;
+      --swd-amber-warn: #D97706;
+      --swd-red-alert: #DC2626;
+      --shadow-sm: 0 2px 6px rgba(11, 37, 69, 0.05);
+      --shadow-md: 0 8px 22px rgba(11, 37, 69, 0.09);
+      --shadow-glow: 0 0 0 3px rgba(0, 158, 219, 0.28);
+    }
+
+    html[data-theme="dark"] {
+      --un-light-bg: #071120;
+      --card-bg: #0F1E36;
+      --card-bg-alt: #162947;
+      --text-main: #F1F5F9;
+      --text-muted: #CBD5E1;
+      --text-light: #94A3B8;
+      --border-subtle: #1E3A5F;
+      --border-focus: #009EDB;
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.35);
+      --shadow-md: 0 10px 26px rgba(0, 0, 0, 0.5);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: var(--un-light-bg);
+      color: var(--text-main);
+      line-height: 1.45;
+      padding-bottom: 44px;
+      transition: background-color 0.25s ease, color 0.25s ease;
+    }
+
+    /* 1. BANNER DE SEGURIDAD DE LA INFORMACIÓN (DISCLAIMER) */
+    .security-banner {
+      background: linear-gradient(90deg, #7F1D1D 0%, #991B1B 50%, #7F1D1D 100%);
+      color: #FEF2F2;
+      padding: 8px 24px;
+      font-size: 0.77rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+      letter-spacing: 0.01em;
+      border-bottom: 2px solid #FCA5A5;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .security-banner .badge-sec {
+      background: #FEF2F2;
+      color: #991B1B;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.69rem;
+      margin-right: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      display: inline-block;
+    }
+
+    /* 2. CABECERA EJECUTIVA UNODC */
+    .top-header {
+      background: var(--card-bg);
+      border-bottom: 3px solid var(--un-cyan);
+      padding: 14px 26px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+      box-shadow: var(--shadow-sm);
+      transition: background-color 0.25s ease;
+    }
+
+    .brand-zone {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .logo-wrapper {
+      display: flex;
+      align-items: center;
+      height: 58px;
+      background: #FFFFFF;
+      padding: 4px 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .logo-wrapper img {
+      max-height: 50px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .divider-v {
+      width: 2px;
+      height: 44px;
+      background-color: var(--border-subtle);
+    }
+
+    .title-zone h1 {
+      font-size: 1.24rem;
+      font-weight: 800;
+      color: var(--text-main);
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .live-badge {
+      font-size: 0.68rem;
+      font-weight: 700;
+      background: rgba(13, 148, 136, 0.14);
+      color: var(--swd-teal-success);
+      border: 1px solid rgba(13, 148, 136, 0.35);
+      padding: 2px 8px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .live-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--swd-teal-success);
+      animation: pulseDot 1.8s infinite;
+    }
+
+    @keyframes pulseDot {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.45); opacity: 0.45; }
+    }
+
+    .title-zone p {
+      font-size: 0.81rem;
+      color: var(--text-muted);
+      font-weight: 500;
+      margin-top: 2px;
+    }
+
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .meta-pill {
+      background: var(--card-bg-alt);
+      border: 1px solid var(--border-subtle);
+      border-radius: 6px;
+      padding: 6px 11px;
+      font-size: 0.73rem;
+      color: var(--text-muted);
+    }
+
+    .meta-pill strong {
+      color: var(--text-main);
+    }
+
+    .btn-header {
+      background: var(--card-bg-alt);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.74rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.18s ease;
+    }
+
+    .btn-header:hover {
+      border-color: var(--un-cyan);
+      background: rgba(0, 158, 219, 0.1);
+      transform: translateY(-1px);
+    }
+
+    .btn-header.primary {
+      background: linear-gradient(135deg, var(--un-blue-dark), var(--un-cyan));
+      color: #FFFFFF;
+      border-color: transparent;
+    }
+
+    .btn-header.primary:hover {
+      filter: brightness(1.08);
+      box-shadow: 0 4px 10px rgba(0, 158, 219, 0.3);
+    }
+
+    /* CONTENEDOR PANORÁMICO HORIZONTAL */
+    .dashboard-container {
+      max-width: 1880px;
+      margin: 0 auto;
+      padding: 16px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* 3. BARRA DE COMANDOS INTERACTIVA GLOBAL */
+    .command-bar {
+      background: var(--card-bg);
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .cmd-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .cmd-label {
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: var(--un-cyan);
+      letter-spacing: 0.05em;
+      margin-right: 4px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .cmd-btn {
+      background: var(--card-bg-alt);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      padding: 7px 13px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .cmd-btn:hover {
+      border-color: var(--un-cyan);
+      color: var(--text-main);
+      transform: translateY(-1px);
+    }
+
+    .cmd-btn.active {
+      background: var(--un-navy);
+      color: #FFFFFF;
+      border-color: var(--un-cyan);
+      box-shadow: 0 3px 10px rgba(11, 37, 69, 0.25);
+    }
+
+    html[data-theme="dark"] .cmd-btn.active {
+      background: var(--un-cyan);
+      color: #071120;
+    }
+
+    .cmd-btn.raci-toggle {
+      background: rgba(0, 158, 219, 0.1);
+      color: var(--un-blue-dark);
+      border-color: rgba(0, 158, 219, 0.35);
+    }
+
+    html[data-theme="dark"] .cmd-btn.raci-toggle {
+      color: #38BDF8;
+    }
+
+    .cmd-btn.raci-toggle.active {
+      background: var(--swd-teal-success);
+      color: #FFFFFF;
+      border-color: var(--swd-teal-success);
+    }
+
+    /* PANEL EJECUTIVO DESPLEGABLE: RIESGOS ESTRATÉGICOS + RACI + LECCIONES 2026 */
+    .governance-drawer {
+      display: none;
+      background: var(--card-bg);
+      border: 2px solid var(--un-cyan);
+      border-radius: 10px;
+      padding: 18px 20px;
+      box-shadow: var(--shadow-md);
+      animation: slideDown 0.28s ease-out;
+    }
+
+    .governance-drawer.open {
+      display: block;
+    }
+
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .gov-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 1fr 1fr;
+      gap: 16px;
+      margin-top: 12px;
+    }
+
+    .gov-box {
+      background: var(--card-bg-alt);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      padding: 12px 14px;
+    }
+
+    .gov-box h4 {
+      font-size: 0.8rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: var(--un-blue-dark);
+      margin-bottom: 10px;
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    html[data-theme="dark"] .gov-box h4 {
+      color: #38BDF8;
+    }
+
+    .gov-item {
+      font-size: 0.75rem;
+      margin-bottom: 8px;
+      padding-bottom: 8px;
+      border-bottom: 1px dashed var(--border-subtle);
+    }
+
+    .gov-item:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+
+    /* 4. SÍNTESIS NARRATIVA (STORYTELLING BANNER) */
+    .story-callout {
+      background: linear-gradient(135deg, #0B2545 0%, #005BBB 65%, #0077B6 100%);
+      color: #FFFFFF;
+      border-radius: 10px;
+      padding: 16px 22px;
+      display: grid;
+      grid-template-columns: 3.1fr 1.9fr;
+      gap: 20px;
+      align-items: center;
+      box-shadow: 0 6px 18px rgba(0, 91, 187, 0.18);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .story-callout h2 {
+      font-size: 0.92rem;
+      font-weight: 800;
+      margin-bottom: 5px;
+      color: #7DD3FC;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .story-callout p {
+      font-size: 0.85rem;
+      color: #F8FAFC;
+      line-height: 1.52;
+    }
+
+    .story-highlights {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+    }
+
+    .mini-stat {
+      background: rgba(255, 255, 255, 0.11);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-left: 4px solid var(--un-cyan);
+      padding: 9px 14px;
+      border-radius: 8px;
+      min-width: 132px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .mini-stat:hover {
+      background: rgba(255, 255, 255, 0.22);
+      transform: translateY(-2px);
+    }
+
+    .mini-stat .val {
+      font-size: 1.18rem;
+      font-weight: 800;
+      color: #FFFFFF;
+    }
+
+    .mini-stat .lbl {
+      font-size: 0.69rem;
+      color: #E0F2FE;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    /* 5. BANDA DE 6 TARJETAS KPI HORIZONTALES CON BOTONES Y ANIMACIÓN */
+    .kpi-strip {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 14px;
+    }
+
+    .kpi-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-subtle);
+      border-top: 4px solid var(--un-cyan);
+      border-radius: 10px;
+      padding: 14px 15px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease, opacity 0.22s ease;
+      position: relative;
+    }
+
+    .kpi-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .kpi-card.focused-card {
+      box-shadow: var(--shadow-glow);
+      border-color: var(--un-cyan);
+    }
+
+    .kpi-card.dimmed {
+      opacity: 0.42;
+    }
+
+    .kpi-card.alert { border-top-color: var(--swd-red-alert); }
+    .kpi-card.warn { border-top-color: var(--swd-amber-warn); }
+    .kpi-card.success { border-top-color: var(--swd-teal-success); }
+
+    .kpi-top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 6px;
+    }
+
+    .kpi-label {
+      font-size: 0.71rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--text-light);
+      letter-spacing: 0.03em;
+    }
+
+    .kpi-pillar-chip {
+      font-size: 0.64rem;
+      font-weight: 800;
+      padding: 1px 6px;
+      border-radius: 4px;
+      background: var(--card-bg-alt);
+      color: var(--text-muted);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .kpi-main {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 6px;
+      margin: 7px 0 5px 0;
+    }
+
+    .kpi-value {
+      font-size: 1.62rem;
+      font-weight: 800;
+      color: var(--text-main);
+      letter-spacing: -0.03em;
+    }
+
+    .kpi-delta {
+      font-size: 0.71rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+
+    .delta-pos { background: #CCFBF1; color: #0F766E; }
+    .delta-warn { background: #FEF3C7; color: #B45309; }
+    .delta-neg { background: #FEE2E2; color: #B91C1C; }
+
+    .kpi-progress-track {
+      width: 100%;
+      height: 6px;
+      background: var(--border-subtle);
+      border-radius: 999px;
+      overflow: hidden;
+      margin: 6px 0;
+    }
+
+    .kpi-progress-fill {
+      height: 100%;
+      border-radius: 999px;
+      width: 0%;
+      transition: width 1s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .kpi-sub {
+      font-size: 0.73rem;
+      color: var(--text-muted);
+      margin-bottom: 9px;
+      min-height: 32px;
+    }
+
+    .kpi-action-btn {
+      width: 100%;
+      background: var(--card-bg-alt);
+      border: 1px solid var(--border-subtle);
+      color: var(--un-blue-dark);
+      padding: 5px 8px;
+      border-radius: 6px;
+      font-size: 0.71rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      transition: all 0.18s ease;
+    }
+
+    html[data-theme="dark"] .kpi-action-btn {
+      color: #38BDF8;
+    }
+
+    .kpi-action-btn:hover {
+      background: var(--un-blue-dark);
+      color: #FFFFFF;
+      border-color: var(--un-blue-dark);
+    }
+
+    /* 6. GRILLA HORIZONTAL MULTI-CHART (2 FILAS x 3 COLUMNAS PANORÁMICAS) */
+    .charts-grid-row1 {
+      display: grid;
+      grid-template-columns: 1.15fr 1fr 1.35fr;
+      gap: 16px;
+    }
+
+    .charts-grid-row2 {
+      display: grid;
+      grid-template-columns: 1.3fr 1fr 1.2fr;
+      gap: 16px;
+    }
+
+    .chart-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      padding: 15px 18px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+    }
+
+    .chart-card:hover {
+      box-shadow: var(--shadow-md);
+    }
+
+    .chart-card.pulse-highlight {
+      border-color: var(--un-cyan);
+      box-shadow: var(--shadow-glow);
+    }
+
+    .chart-header {
+      margin-bottom: 10px;
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 9px;
+    }
+
+    .chart-top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 4px;
+    }
+
+    .chart-kicker {
+      font-size: 0.67rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: var(--un-cyan);
+      letter-spacing: 0.05em;
+    }
+
+    .chart-switcher {
+      display: inline-flex;
+      background: var(--card-bg-alt);
+      border: 1px solid var(--border-subtle);
+      border-radius: 6px;
+      padding: 2px;
+      gap: 2px;
+    }
+
+    .sw-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .sw-btn:hover {
+      color: var(--text-main);
+    }
+
+    .sw-btn.active {
+      background: var(--un-blue-dark);
+      color: #FFFFFF;
+    }
+
+    .chart-action-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--text-main);
+      line-height: 1.32;
+    }
+
+    .chart-subtitle {
+      font-size: 0.74rem;
+      color: var(--text-light);
+      margin-top: 3px;
+    }
+
+    .canvas-holder {
+      position: relative;
+      flex: 1;
+      min-height: 255px;
+      width: 100%;
+    }
+
+    .canvas-holder.tall {
+      min-height: 325px;
+    }
+
+    .chart-footnote {
+      margin-top: 10px;
+      padding-top: 8px;
+      border-top: 1px dashed var(--border-subtle);
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    /* 7. SECCIÓN DEL 100% DE LAS METAS (41 INDICADORES POR PILAR) */
+    .full-matrix-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      padding: 18px 20px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .matrix-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 14px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--border-subtle);
+    }
+
+    .filter-group {
+      display: flex;
+      gap: 7px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .filter-btn {
+      background: var(--card-bg-alt);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .filter-btn.active, .filter-btn:hover {
+      background: var(--un-navy);
+      color: #FFFFFF;
+      border-color: var(--un-cyan);
+    }
+
+    html[data-theme="dark"] .filter-btn.active {
+      background: var(--un-cyan);
+      color: #071120;
+    }
+
+    .search-input {
+      padding: 6px 12px;
+      background: var(--card-bg-alt);
+      color: var(--text-main);
+      border: 1px solid var(--border-subtle);
+      border-radius: 6px;
+      font-size: 0.77rem;
+      min-width: 245px;
+    }
+
+    .table-responsive {
+      overflow-x: auto;
+      max-height: 560px;
+      overflow-y: auto;
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+    }
+
+    table.swd-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.77rem;
+      text-align: left;
+    }
+
+    table.swd-table thead th {
+      position: sticky;
+      top: 0;
+      background: var(--card-bg-alt);
+      color: var(--text-main);
+      font-weight: 800;
+      text-transform: uppercase;
+      font-size: 0.68rem;
+      letter-spacing: 0.04em;
+      padding: 10px 11px;
+      border-bottom: 2px solid var(--border-subtle);
+      z-index: 2;
+    }
+
+    table.swd-table tbody tr {
+      border-bottom: 1px solid var(--border-subtle);
+      transition: background 0.12s;
+    }
+
+    table.swd-table tbody tr:hover {
+      background: rgba(0, 158, 219, 0.08);
+    }
+
+    table.swd-table td {
+      padding: 9px 11px;
+      vertical-align: middle;
+    }
+
+    .pillar-tag {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.67rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .p-prog { background: #E0F2FE; color: #0369A1; }
+    .p-part { background: #EDE9FE; color: #5B21B6; }
+    .p-mgmt { background: #FEF3C7; color: #92400E; }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 0.69rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .st-done { background: #CCFBF1; color: #0F766E; }
+    .st-prog { background: #FEF3C7; color: #B45309; }
+    .st-none { background: #FEE2E2; color: #B91C1C; }
+
+    .sparkbar-wrap {
+      width: 128px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .sparkbar-bg {
+      flex: 1;
+      height: 8px;
+      background: var(--border-subtle);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .sparkbar-fill {
+      height: 100%;
+      border-radius: 4px;
+    }
+
+    .sparkbar-val {
+      font-size: 0.72rem;
+      font-weight: 800;
+      min-width: 38px;
+      text-align: right;
+    }
+
+    .btn-row-inspect {
+      background: var(--card-bg-alt);
+      border: 1px solid var(--border-subtle);
+      color: var(--un-blue-dark);
+      padding: 4px 9px;
+      border-radius: 5px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s;
+    }
+
+    html[data-theme="dark"] .btn-row-inspect {
+      color: #38BDF8;
+    }
+
+    .btn-row-inspect:hover {
+      background: var(--un-blue-dark);
+      color: #FFFFFF;
+      border-color: var(--un-blue-dark);
+    }
+
+    /* MODAL EJECUTIVO DE DETALLE DE INDICADOR */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(11, 37, 69, 0.65);
+      backdrop-filter: blur(3px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      padding: 20px;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal-card {
+      background: var(--card-bg);
+      color: var(--text-main);
+      border: 2px solid var(--un-cyan);
+      border-radius: 12px;
+      max-width: 680px;
+      width: 100%;
+      padding: 22px 24px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+      animation: slideDown 0.2s ease-out;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 12px;
+      margin-bottom: 14px;
+    }
+
+    .modal-close {
+      background: var(--card-bg-alt);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      width: 30px;
+      height: 30px;
+      border-radius: 6px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .modal-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .modal-field {
+      background: var(--card-bg-alt);
+      border: 1px solid var(--border-subtle);
+      padding: 10px 12px;
+      border-radius: 8px;
+    }
+
+    .modal-field .lbl {
+      font-size: 0.68rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: var(--text-light);
+      margin-bottom: 3px;
+    }
+
+    .modal-field .val {
+      font-size: 0.86rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    /* FOOTER DE SEGURIDAD */
+    .footer-disclaimer {
+      margin-top: 8px;
+      background: #0B2545;
+      color: #CBD5E1;
+      border-radius: 10px;
+      padding: 14px 20px;
+      font-size: 0.75rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      border-left: 5px solid var(--un-cyan);
+    }
+
+    @media (max-width: 1440px) {
+      .kpi-strip { grid-template-columns: repeat(3, 1fr); }
+      .charts-grid-row1, .charts-grid-row2, .gov-grid { grid-template-columns: 1fr; }
+      .story-callout { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 768px) {
+      .kpi-strip { grid-template-columns: 1fr; }
+      .modal-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 1. DISCLAIMER DE SEGURIDAD DE LA INFORMACIÓN -->
+  <div class="security-banner">
+    <div>
+      <span class="badge-sec">Aviso de Seguridad de la Información</span>
+      <strong>AVISO DE SEGURIDAD DE LA INFORMACIÓN — DISCLAIMER:</strong> Esta información ha sido modificada, anonimizada y ajustada con fines demostrativos por efectos de seguridad de la información y políticas de confidencialidad institucional de la UNODC.
+    </div>
+    <div>Clasificación: <strong>USO DEMOSTRATIVO / DATOS MODIFICADOS</strong></div>
+  </div>
+
+  <!-- 2. CABECERA CON LOGO UNODC EN RUTA D:\UNODC\logo Y CONTROLES EJECUTIVOS -->
+  <header class="top-header">
+    <div class="brand-zone">
+      <div class="logo-wrapper">
+        <img id="unodcLogoImg"
+             src="file:///D:/UNODC/logo/UNODC-logo.png"
+             alt="Naciones Unidas - Oficina contra la Droga y el Delito"
+             onerror="handleLogoFallback(this)" />
+      </div>
+      <div class="divider-v"></div>
+      <div class="title-zone">
+        <h1>
+          WORKPLAN COBOL 2025 — EXECUTIVE PERFORMANCE DASHBOARD
+          <span class="live-badge"><span class="live-dot"></span> RBM Interactive</span>
+        </h1>
+        <p>Results-Based Management (RBM) Monitoring | 3 Strategic Pillars • 17 Outcomes • 41 Performance Targets (100% Mapped)</p>
+      </div>
+    </div>
+
+    <div class="header-controls">
+      
+      <button class="btn-header" id="themeToggleBtn" onclick="toggleExecutiveTheme()">
+        Modo Oscuro Ejecutivo
+      </button>
+      <button class="btn-header primary" onclick="resetAndAnimateDashboard()">
+         Animar / Resetear Vista
+      </button>
+      <div class="meta-pill"> Fecha de Corte: <strong>19 Ene 2026</strong></div>
+    </div>
+  </header>
+
+  <main class="dashboard-container">
+
+    <!-- 3. BARRA DE COMANDOS INTERACTIVA GLOBAL (CROSS-FILTERING) -->
+    <section class="command-bar">
+      <div class="cmd-left">
+        <span class="cmd-label"> Filtros Ejecutivos:</span>
+        <button class="cmd-btn active" id="cmd-ALL" onclick="applyGlobalCommand('ALL', this)">
+          Vista Global (3 Pilares • 41 Metas)
+        </button>
+        <button class="cmd-btn" id="cmd-P1" onclick="applyGlobalCommand('P1', this)">
+           Pilar 1: Gestión Programática (14)
+        </button>
+        <button class="cmd-btn" id="cmd-P2" onclick="applyGlobalCommand('P2', this)">
+           Pilar 2: Construcción de Alianzas (15)
+        </button>
+        <button class="cmd-btn" id="cmd-P3" onclick="applyGlobalCommand('P3', this)">
+           Pilar 3: Gestión de Oficina (12)
+        </button>
+        <button class="cmd-btn" id="cmd-ALERT" onclick="applyGlobalCommand('ALERT', this)">
+           Foco Crítico: Brechas y En Progreso (10)
+        </button>
+      </div>
+      <div>
+        <button class="cmd-btn raci-toggle" id="raciToggleBtn" onclick="toggleGovernanceDrawer()">
+           Matriz de Riesgos y Gobernanza RACI ▾
+        </button>
+      </div>
+    </section>
+
+    <!-- PANEL DESPLEGABLE DE RIESGOS ESTRATÉGICOS, RACI Y LECCIONES APRENDIDAS 2026 -->
+    <section class="governance-drawer" id="governanceDrawer">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+        <div>
+          <span class="chart-kicker">Gobernanza Ejecutiva • Gestión Basada en Resultados (RBM)</span>
+          <h3 class="chart-action-title">Matriz de Riesgos Estratégicos, Responsabilidades RACI y Hoja de Ruta 2026</h3>
+        </div>
+        <button class="btn-header" onclick="toggleGovernanceDrawer()">✕ Cerrar Panel</button>
+      </div>
+
+      <div class="gov-grid">
+        <!-- Columna 1: 3 Riesgos Estratégicos -->
+        <div class="gov-box">
+          <h4><span>3 Riesgos Estratégicos Monitoreados</span> <span class="pillar-tag p-part">Outcomes 1.2 • 2.4 • 2.5</span></h4>
+          <div class="gov-item">
+            <strong>Riesgo 1 (Outcome 1.2 - Portafolio y Propuestas):</strong> Alta competencia por fondos de cooperación y tiempos de aprobación externos. <em>Mitigación:</em> Se presentaron 8/10 propuestas y se aseguraron <strong>$4.69M USD</strong> mediante 2 acuerdos NDICI-LA con la Unión Europea (AML y Drogas III).
+          </div>
+          <div class="gov-item">
+            <strong>Riesgo 2 (Outcome 2.4 - Aportes Estatales PSB 2024–2025):</strong> Restricciones fiscales e institucionales en periodo de transición electoral. <em>Mitigación:</em> En diciembre de 2025 se logró el desembolso de la contribución 2023 ($250,000 USD equiv.); seguimiento diplomático con Cancillería para 2024–2025.
+          </div>
+          <div class="gov-item">
+            <strong>Riesgo 3 (Outcome 2.5 - Monitoreo Tecnológico de Laboratorios):</strong> Requerimientos técnicos y presupuestarios para vigilancia tecnológica. <em>Mitigación:</em> Incorporado formalmente bajo el nuevo proyecto "Control de Drogas" (€3.0M con la UE) para despliegue en 2026.
+          </div>
+        </div>
+
+        <!-- Columna 2: Gobernanza RACI -->
+        <div class="gov-box">
+          <h4><span> Gobernanza RACI de Indicadores Clave</span> <span class="pillar-tag p-prog">Outcomes 1.1 • 2.7 • 3.2</span></h4>
+          <div class="gov-item">
+            <strong>Outcome 1.1 (Presupuesto, PGC y Reportes - 36/40):</strong><br>
+            • <strong>R (Responsable):</strong> Oficiales de Finanzas y Coordinadores de Proyecto.<br>
+            • <strong>A (Aprobador):</strong> Jefatura de Oficina (COBOL) / Sede.<br>
+            • <strong>C/I (Consultado/Informado):</strong> Unidad de Monitoreo (MEAL) y Donantes.
+          </div>
+          <div class="gov-item">
+            <strong>Outcome 2.7 (Visibilidad y 8 Eventos de Alto Nivel - 160%):</strong><br>
+            • <strong>R (Responsable):</strong> Punto Focal de Comunicación.<br>
+            • <strong>A (Aprobador):</strong> Representación COBOL.<br>
+            • <strong>C/I:</strong> Coordinadores Técnicos (UE, KOICA, ROCOL).
+          </div>
+          <div class="gov-item">
+            <strong>Outcome 3.2 (Operaciones Eficientes y 3 Instructivos SOP - 150%):</strong><br>
+            • <strong>R (Responsable):</strong> Unidad de Operaciones y RRHH.<br>
+            • <strong>A (Aprobador):</strong> Administración / Gerencia.<br>
+            • <strong>C/I:</strong> Todo el personal de oficina central y terreno (La Asunta).
+          </div>
+        </div>
+
+        <!-- Columna 3: Lecciones Aprendidas 2026 -->
+        <div class="gov-box">
+          <h4><span>4 Lecciones Aprendidas y Mejoras Ciclo 2026</span> <span class="pillar-tag p-mgmt">Evaluación RBM</span></h4>
+          <div class="gov-item">
+            <strong>1. Monitoreo Continuo Trimestral vs. Reactivo:</strong> Transitar de una recolección concentrada a fin de año hacia cortes trimestrales para evitar sobrecarga administrativa en el Q4.
+          </div>
+          <div class="gov-item">
+            <strong>2. Asignación Temprana de Puntos Focales:</strong> Notificar formalmente a titulares y colaboradores desde la formulación del Workplan en el Q1.
+          </div>
+          <div class="gov-item">
+            <strong>3. Inducción de Medio Año en Formatos RBM:</strong> Capacitar a mitad de gestión sobre criterios de calidad y estandarización de medios de verificación.
+          </div>
+          <div class="gov-item">
+            <strong>4. Política de "Carga Inmediata" en Nube (OneDrive):</strong> Subir actas, reportes e informes al repositorio digital en el momento de su generación (lección clave reforzada por evaluación BOLAB4).
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. NARRATIVA EJECUTIVA ("THE BIG IDEA" - STORYTELLING WITH DATA) -->
+    <section class="story-callout">
+      <div>
+        <h2> Hallazgo Estratégico Principal (The Big Idea — Executive Synthesis)</h2>
+        <p>
+          Al cierre de la gestión 2025, la Oficina de País en Bolivia (COBOL) alcanzó un <strong>75.6% de metas completadas (31/41 indicadores)</strong>, destacándose un sobrecumplimiento del <strong>116% en movilización de recursos ($4.69M USD suscritos con la UE)</strong> y del <strong>160% en eventos de alto nivel (8/5)</strong>. La prioridad gerencial para el Q1-2026 se concentra en tres cuellos de botella administrativos: <strong>1)</strong> formalizar el <strong>51% restante de planes e-Performance</strong>, <strong>2)</strong> destrabar la baja/donación de <strong>19 de los 23 vehículos</strong> en desuso, y <strong>3)</strong> recaudar las contribuciones estatales pendientes del PSB (2024–2025).
+        </p>
+      </div>
+      <div class="story-highlights">
+        <div class="mini-stat" onclick="applyGlobalCommand('ALL', document.getElementById('cmd-ALL'))" title="Haz clic para ver los 3 Pilares">
+          <div class="val">3 Pilares</div>
+          <div class="lbl">Alineación País</div>
+        </div>
+        <div class="mini-stat" onclick="focusChartCard('cardOutcomes17')" title="Haz clic para resaltar los 17 Outcomes">
+          <div class="val">17 Outcomes</div>
+          <div class="lbl">Cadena RBM</div>
+        </div>
+        <div class="mini-stat" onclick="document.getElementById('matrixSection').scrollIntoView({behavior:'smooth'})" title="Ir a la matriz de 41 metas">
+          <div class="val">41 Metas</div>
+          <div class="lbl">100% Mapeadas</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. BANDA DE 6 TARJETAS KPI DINÁMICAS CON CONTADORES ANIMADOS Y BOTÓN DE ENFOQUE -->
+    <section class="kpi-strip">
+      <!-- KPI 1 -->
+      <div class="kpi-card" id="kpiCard-ALL" data-pillar="ALL">
+        <div class="kpi-top-row">
+          <span class="kpi-label">Cumplimiento Global (41 Metas)</span>
+          <span class="kpi-pillar-chip">Global RBM</span>
+        </div>
+        <div class="kpi-main">
+          <span class="kpi-value" data-count="75.6" data-suffix="%">75.6%</span>
+          <span class="kpi-delta delta-pos">31 Completadas</span>
+        </div>
+        <div class="kpi-progress-track">
+          <div class="kpi-progress-fill" data-width="75.6%" style="background: var(--un-cyan);"></div>
+        </div>
+        <div class="kpi-sub">5 En Progreso (12.2%) • 5 No Iniciadas (12.2%)</div>
+        <button class="kpi-action-btn" onclick="focusFromKPI('ALL', 'cardPillarStacked', '')">
+          🔍 Focalizar en Tablero
+        </button>
+      </div>
+
+      <!-- KPI 2 -->
+      <div class="kpi-card warn" id="kpiCard-DELIVERY" data-pillar="P1">
+        <div class="kpi-top-row">
+          <span class="kpi-label">Ejecución Financiera (1.1.1)</span>
+          <span class="kpi-pillar-chip">Pilar 1</span>
+        </div>
+        <div class="kpi-main">
+          <span class="kpi-value" data-count="3.70" data-prefix="$" data-suffix="M">$3.70M</span>
+          <span class="kpi-delta delta-warn">89% Portal</span>
+        </div>
+        <div class="kpi-progress-track">
+          <div class="kpi-progress-fill" data-width="89%" style="background: var(--swd-amber-warn);"></div>
+        </div>
+        <div class="kpi-sub">Meta Portal: $4.10M | Meta Original: $4.50M (82%)</div>
+        <button class="kpi-action-btn" onclick="focusFromKPI('P1', 'cardFinancialBullet', '1.1')">
+          🔍 Focalizar en Tablero
+        </button>
+      </div>
+
+      <!-- KPI 3 -->
+      <div class="kpi-card success" id="kpiCard-FUNDS" data-pillar="P1">
+        <div class="kpi-top-row">
+          <span class="kpi-label">Movilización Recursos (1.2.2)</span>
+          <span class="kpi-pillar-chip">Pilar 1</span>
+        </div>
+        <div class="kpi-main">
+          <span class="kpi-value" data-count="4.69" data-prefix="$" data-suffix="M">$4.69M</span>
+          <span class="kpi-delta delta-pos">+16% vs Meta</span>
+        </div>
+        <div class="kpi-progress-track">
+          <div class="kpi-progress-fill" data-width="100%" style="background: var(--swd-teal-success);"></div>
+        </div>
+        <div class="kpi-sub">Meta: $4.00M | 2 nuevos acuerdos UE (AML y Drogas III)</div>
+        <button class="kpi-action-btn" onclick="focusFromKPI('P1', 'cardFinancialBullet', '1.2')">
+          🔍 Focalizar en Tablero
+        </button>
+      </div>
+
+      <!-- KPI 4 -->
+      <div class="kpi-card success" id="kpiCard-DRUGS" data-pillar="P2">
+        <div class="kpi-top-row">
+          <span class="kpi-label">Validación Drogas Incautadas (2.5.2)</span>
+          <span class="kpi-pillar-chip">Pilar 2</span>
+        </div>
+        <div class="kpi-main">
+          <span class="kpi-value" data-count="93.6" data-suffix="%">93.6%</span>
+          <span class="kpi-delta delta-pos">50.97 Tn</span>
+        </div>
+        <div class="kpi-progress-track">
+          <div class="kpi-progress-fill" data-width="93.6%" style="background: var(--swd-teal-success);"></div>
+        </div>
+        <div class="kpi-sub">Supera umbral corporativo del 80% (+13.6 pts)</div>
+        <button class="kpi-action-btn" onclick="focusFromKPI('P2', 'cardVarianceExtremes', '2.5')">
+          🔍 Focalizar en Tablero
+        </button>
+      </div>
+
+      <!-- KPI 5 -->
+      <div class="kpi-card alert" id="kpiCard-EPERF" data-pillar="P3">
+        <div class="kpi-top-row">
+          <span class="kpi-label">Aprobación e-Performance (3.1.3)</span>
+          <span class="kpi-pillar-chip">Pilar 3</span>
+        </div>
+        <div class="kpi-main">
+          <span class="kpi-value" data-count="49.0" data-suffix="%">49.0%</span>
+          <span class="kpi-delta delta-neg">Brecha -51%</span>
+        </div>
+        <div class="kpi-progress-track">
+          <div class="kpi-progress-fill" data-width="49%" style="background: var(--swd-red-alert);"></div>
+        </div>
+        <div class="kpi-sub">Cursos mandatorios al 88%, pero planes pendientes</div>
+        <button class="kpi-action-btn" onclick="focusFromKPI('P3', 'cardVarianceExtremes', '3.1')">
+          🔍 Focalizar en Tablero
+        </button>
+      </div>
+
+      <!-- KPI 6 -->
+      <div class="kpi-card alert" id="kpiCard-VEHICLES" data-pillar="P3">
+        <div class="kpi-top-row">
+          <span class="kpi-label">Donación Flota Vehicular (3.4.3)</span>
+          <span class="kpi-pillar-chip">Pilar 3</span>
+        </div>
+        <div class="kpi-main">
+          <span class="kpi-value">4 / 23</span>
+          <span class="kpi-delta delta-neg">19 en Trámite</span>
+        </div>
+        <div class="kpi-progress-track">
+          <div class="kpi-progress-fill" data-width="17.4%" style="background: var(--swd-red-alert);"></div>
+        </div>
+        <div class="kpi-sub">86% de activos inventariados con código de barras</div>
+        <button class="kpi-action-btn" onclick="focusFromKPI('P3', 'cardVehiclesBreakdown', '3.4')">
+          🔍 Focalizar en Tablero
+        </button>
+      </div>
+    </section>
+
+    <!-- 6. FILA 1 DE GRÁFICOS HORIZONTALES CON BOTONES DE CAMBIO DE VISTA -->
+    <section class="charts-grid-row1">
+
+      <!-- CHART 1: FINANZAS (BULLET / VARIANCE HORIZONTAL) -->
+      <div class="chart-card" id="cardFinancialBullet">
+        <div class="chart-header">
+          <div class="chart-top-bar">
+            <span class="chart-kicker">Pilar 1 • Sostenibilidad Financiera y Ejecución</span>
+            <div class="chart-switcher">
+              <button class="sw-btn active" onclick="switchChart1View('USD', this)">Millones USD ($M)</button>
+              <button class="sw-btn" onclick="switchChart1View('PCT', this)"> % Cumplimiento vs Meta</button>
+            </div>
+          </div>
+          <div class="chart-action-title">La captación de fondos superó la meta en +$0.69M (116%), compensando el rezago del 11% en Delivery</div>
+          <div class="chart-subtitle">Comparación de logro real ($3.70M ejecutados y $4.69M firmados) frente a metas comprometidas</div>
+        </div>
+        <div class="canvas-holder">
+          <canvas id="chartFinancialBullet"></canvas>
+        </div>
+        <div class="chart-footnote">
+          <span>Fuente: Umoja / Budget Portal al cierre 2025 (Datos modificados por seguridad)</span>
+          <strong>8/10 Propuestas presentadas (80%)</strong>
+        </div>
+      </div>
+
+      <!-- CHART 2: 100% STACKED BAR POR PILAR ESTRATÉGICO -->
+      <div class="chart-card" id="cardPillarStacked">
+        <div class="chart-header">
+          <div class="chart-top-bar">
+            <span class="chart-kicker">Cobertura Global • 41 Metas en 3 Pilares</span>
+            <div class="chart-switcher">
+              <button class="sw-btn active" onclick="switchChart2View('PCT', this)">Proporción (%)</button>
+              <button class="sw-btn" onclick="switchChart2View('COUNT', this)"> N° de Indicadores</button>
+            </div>
+          </div>
+          <div class="chart-action-title">Gestión de Oficina lidera en metas finalizadas (83%), mientras Alianzas concentra brechas externas</div>
+          <div class="chart-subtitle">Haz clic en cualquier barra o usa los botones superiores para alternar porcentaje y conteo exacto</div>
+        </div>
+        <div class="canvas-holder">
+          <canvas id="chartPillarStacked"></canvas>
+        </div>
+        <div class="chart-footnote">
+          <span>Total: 14 Programático | 15 Alianzas | 12 Gestión de Oficina</span>
+          <strong>Total: 41 Indicadores (31/5/5)</strong>
+        </div>
+      </div>
+
+      <!-- CHART 3: DESEMPEÑO DE LOS 17 OUTCOMES -->
+      <div class="chart-card" id="cardOutcomes17">
+        <div class="chart-header">
+          <div class="chart-top-bar">
+            <span class="chart-kicker">Desempeño Granular • Los 17 Resultados (Outcomes 1.1 a 3.5)</span>
+            <div class="chart-switcher">
+              <button class="sw-btn active" id="btnOutOrder" onclick="switchChart3View('ORDER', this)">Orden 1.1 → 3.5</button>
+              <button class="sw-btn" id="btnOutRank" onclick="switchChart3View('RANK', this)"> Ranking Mayor a Menor</button>
+              <button class="sw-btn" id="btnOutGaps" onclick="switchChart3View('GAPS', this)">Solo Brechas (&lt;80%)</button>
+            </div>
+          </div>
+          <div class="chart-action-title">6 Outcomes alcanzan o superan el 100% de su meta anual, mientras que el Outcome 2.4 (Aportes PSB) permanece en 0%</div>
+          <div class="chart-subtitle">% de avance por Outcome (verde = ≥100%; azul = 75–99%; ámbar = 55–74%; rojo = crítico &lt;55%)</div>
+        </div>
+        <div class="canvas-holder tall">
+          <canvas id="chartOutcomes17"></canvas>
+        </div>
+        <div class="chart-footnote">
+          <span>Nota: En Dic 2025 se cobró el aporte 2023 ($250K USD equiv.); 2024 y 2025 siguen en gestión</span>
+          <strong id="outcomesCountFooter">17 Outcomes Evaluados</strong>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- FILA 2 DE GRÁFICOS HORIZONTALES CON BOTONES INTERACTIVOS -->
+    <section class="charts-grid-row2">
+
+      <!-- CHART 4: DIVERGING / VARIANCE DE INDICADORES EXTREMOS -->
+      <div class="chart-card" id="cardVarianceExtremes">
+        <div class="chart-header">
+          <div class="chart-top-bar">
+            <span class="chart-kicker">Análisis de Extremos • Sobrecumplimientos vs. Cuellos de Botella</span>
+            <div class="chart-switcher">
+              <button class="sw-btn active" onclick="switchChart4View('ALL', this)">Todos (Top 10)</button>
+              <button class="sw-btn" onclick="switchChart4View('OVER', this)"> Sobrecumplimientos (≥100%)</button>
+              <button class="sw-btn" onclick="switchChart4View('BOTTLENECK', this)">Cuellos de Botella (&lt;50%)</button>
+            </div>
+          </div>
+          <div class="chart-action-title">Visibilidad y normativas operativas duplican metas (+150% a +200%), contrastando con activos y gobernanza</div>
+          <div class="chart-subtitle">% de logro respecto a la meta anual establecida (100% = cumplimiento exacto del objetivo)</div>
+        </div>
+        <div class="canvas-holder">
+          <canvas id="chartVarianceExtremes"></canvas>
+        </div>
+        <div class="chart-footnote">
+          <span>Reunión PGC reprogramada al S1-2026 por transición electoral</span>
+          <strong>Foco de Auditoría Interna</strong>
+        </div>
+      </div>
+
+      <!-- CHART 5: PORTAFOLIO DE REPORTES (36/40 INFORMES) -->
+      <div class="chart-card" id="cardReportingCompliance">
+        <div class="chart-header">
+          <div class="chart-top-bar">
+            <span class="chart-kicker">Indicador 1.1.3 • Rendición de Cuentas (12 Proyectos)</span>
+            <div class="chart-switcher">
+              <button class="sw-btn active" onclick="switchChart5View('PCT', this)">% Cumplimiento</button>
+              <button class="sw-btn" onclick="switchChart5View('COUNT', this)"> Conteo Informes</button>
+            </div>
+          </div>
+          <div class="chart-action-title">El cumplimiento de reportes cerró al 95% global, con rezago puntual en Informes Financieros Certificados (75%)</div>
+          <div class="chart-subtitle">Informes entregados vs. programados según categoría de destinatario (36 de 40 presentados)</div>
+        </div>
+        <div class="canvas-holder">
+          <canvas id="chartReportingCompliance"></canvas>
+        </div>
+        <div class="chart-footnote">
+          <span>APPR (11/11) y Gobierno (6/6) al 100% | Donantes (10/11) | Financieros (9/12)</span>
+          <strong>36 / 40 Informes Cumplidos</strong>
+        </div>
+      </div>
+
+      <!-- CHART 6: GESTIÓN DE FLOTA VEHICULAR Y ACTIVOS (23 UNIDADES) -->
+      <div class="chart-card" id="cardVehiclesBreakdown">
+        <div class="chart-header">
+          <div class="chart-top-bar">
+            <span class="chart-kicker">Indicador 3.4.3 • Diagnóstico Operativo de Baja de Vehículos</span>
+            <div class="chart-switcher">
+              <button class="sw-btn active" onclick="switchChart6View('BAR', this)">Barras Horizontales</button>
+              <button class="sw-btn" onclick="switchChart6View('DOUGHNUT', this)"> Gráfico de Anillo (Donut)</button>
+            </div>
+          </div>
+          <div class="chart-action-title">De 23 vehículos para donación, solo 4 tienen baja concluida en Umoja; 13 fueron rechazados por obsolescencia</div>
+          <div class="chart-subtitle">Desglose de las 23 unidades según estado administrativo y cuellos de botella externos</div>
+        </div>
+        <div class="canvas-holder">
+          <canvas id="chartVehiclesBreakdown"></canvas>
+        </div>
+        <div class="chart-footnote">
+          <span>Oficina La Asunta operativa (50% meta terreno) | Código barras: 85.7%</span>
+          <strong>23 Unidades en Gestión</strong>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- 7. MATRIZ INTERACTIVA CON EL 100% DE LAS METAS (41 INDICADORES) -->
+    <section class="full-matrix-card" id="matrixSection">
+      <div class="matrix-toolbar">
+        <div>
+          <div class="chart-kicker">Trazabilidad Completa • 100% de las Metas por Pilar (41 Indicadores / 17 Outcomes)</div>
+          <h3 class="chart-action-title">
+            Matriz Ejecutiva de Cumplimiento del Plan de Trabajo COBOL 2025
+            <span id="matrixCountBadge" style="font-size:0.76rem; color:var(--un-cyan); margin-left:8px;">(Mostrando 41 de 41 metas)</span>
+          </h3>
+        </div>
+        <div class="filter-group">
+          <button class="filter-btn active" id="tblBtn-ALL" onclick="filterTable('ALL', this)">Todos (41)</button>
+          <button class="filter-btn" id="tblBtn-P1" onclick="filterTable('P1', this)">Pilar 1: Programático (14)</button>
+          <button class="filter-btn" id="tblBtn-P2" onclick="filterTable('P2', this)">Pilar 2: Alianzas (15)</button>
+          <button class="filter-btn" id="tblBtn-P3" onclick="filterTable('P3', this)">Pilar 3: Oficina (12)</button>
+          <button class="filter-btn" id="tblBtn-DONE" onclick="filterTable('DONE', this)">✅ Completados (31)</button>
+          <button class="filter-btn" id="tblBtn-ALERT" onclick="filterTable('ALERT', this)">⚠️ En Progreso / No Iniciado (10)</button>
+          <input type="text" id="tableSearch" class="search-input" placeholder="🔎 Buscar código (ej. 2.5.2), meta o evidencia..." oninput="searchTable()" />
+          <button class="btn-header primary" onclick="exportMatrixCSV()" title="Descargar las metas filtradas en formato CSV compatible con Excel">
+            📥 Exportar CSV
+          </button>
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <table class="swd-table" id="indicatorsTable">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Pilar Estratégico</th>
+              <th>Outcome</th>
+              <th>Indicador / Meta Específica 2025</th>
+              <th>Meta Anual</th>
+              <th>Logro 2025</th>
+              <th>% Avance Visual</th>
+              <th>Estado</th>
+              <th>Unidad Responsable (Anonimizada) y Evidencia Clave</th>
+              <th>Acción</th>
+            </tr>
+          </thead>
+          <tbody id="indicatorsTableBody">
+            <!-- Renderizado dinámicamente con las 41 metas exactas -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- PIE DE PÁGINA CON DISCLAIMER DE SEGURIDAD -->
+    <footer class="footer-disclaimer">
+      <div>
+        <strong>AVISO DE SEGURIDAD DE LA INFORMACIÓN — DISCLAIMER:</strong> Esta información ha sido modificada, anonimizada y ajustada con fines demostrativos por efectos de seguridad de la información y políticas de confidencialidad institucional de la UNODC.
+      </div>
+      <div>
+        Arquitectura Visual: <strong>UNODC Identity (#009EDB / #005BBB / #0B2545) + Storytelling with Data</strong> | Seguimiento RBM COBOL 2025
+      </div>
+    </footer>
+
+  </main>
+
+  <!-- MODAL EJECUTIVO PARA INSPECCIONAR FICHA TÉCNICA DE CADA INDICADOR -->
+  <div class="modal-backdrop" id="indicatorModal" onclick="closeModalOnBackdrop(event)">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div>
+          <span class="chart-kicker" id="modalPillarKicker">PILAR ESTRATÉGICO</span>
+          <h3 class="chart-action-title" id="modalTitle" style="font-size:1.05rem; margin-top:3px;">Ficha Técnica del Indicador</h3>
+        </div>
+        <button class="modal-close" onclick="closeIndicatorModal()">✕</button>
+      </div>
+      <div class="modal-grid">
+        <div class="modal-field">
+          <div class="lbl">Código de Indicador</div>
+          <div class="val" id="modalId">-</div>
+        </div>
+        <div class="modal-field">
+          <div class="lbl">Resultado (Outcome RBM)</div>
+          <div class="val" id="modalOutcome">-</div>
+        </div>
+        <div class="modal-field">
+          <div class="lbl">Meta Anual Comprometida</div>
+          <div class="val" id="modalTarget">-</div>
+        </div>
+        <div class="modal-field">
+          <div class="lbl">Logro Alcanzado al Corte</div>
+          <div class="val" id="modalActual">-</div>
+        </div>
+        <div class="modal-field">
+          <div class="lbl">Porcentaje de Cumplimiento</div>
+          <div class="val" id="modalPct">-</div>
+        </div>
+        <div class="modal-field">
+          <div class="lbl">Estado de Verificación</div>
+          <div class="val" id="modalStatus">-</div>
+        </div>
+      </div>
+      <div class="modal-field" style="margin-bottom:12px;">
+        <div class="lbl">Descripción de la Meta Específica 2025</div>
+        <div class="val" id="modalDesc" style="font-weight:500; line-height:1.45;">-</div>
+      </div>
+      <div class="modal-field" style="margin-bottom:14px;">
+        <div class="lbl">Unidad Proveedora (Anonimizada) y Medio de Verificación</div>
+        <div class="val" id="modalUnit" style="font-weight:500; line-height:1.45;">-</div>
+      </div>
+      <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.72rem; color:var(--text-light);">
+        <span> Registro anonimizado bajo protocolo de Seguridad de la Información UNODC</span>
+        <button class="btn-header primary" onclick="closeIndicatorModal()">Entendido</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Registro de ChartDataLabels
+    Chart.register(ChartDataLabels);
+
+    // =========================================================================
+    // 1. GESTIÓN DE LOGO UNODC (D:\UNODC\logo + FALLBACK VECTORIAL OFICIAL)
+    // =========================================================================
+    function handleLogoFallback(imgElement) {
+      const altPaths = [
+        "D:/UNODC/logo/UNODC-logo.png",
+        "file:///D:/UNODC/logo/logo.png",
+        "file:///D:/UNODC/logo/UNODC-logo-full-ES-4c 3_0126.png",
+        "UNODC-logo.png"
+      ];
+      const tried = parseInt(imgElement.dataset.tried || "0", 10);
+      if (tried < altPaths.length) {
+        imgElement.dataset.tried = tried + 1;
+        imgElement.src = altPaths[tried];
+        return;
+      }
+      const svgLogo = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540 120" width="250" height="52">
+        <rect width="540" height="120" fill="#ffffff"/>
+        <g transform="translate(58,60)">
+          <circle cx="0" cy="0" r="38" fill="none" stroke="#009EDB" stroke-width="3"/>
+          <circle cx="0" cy="0" r="27" fill="none" stroke="#009EDB" stroke-width="2"/>
+          <circle cx="0" cy="0" r="16" fill="none" stroke="#009EDB" stroke-width="2"/>
+          <circle cx="0" cy="0" r="6" fill="#009EDB"/>
+          <line x1="-38" y1="0" x2="38" y2="0" stroke="#009EDB" stroke-width="1.8"/>
+          <line x1="0" y1="-38" x2="0" y2="38" stroke="#009EDB" stroke-width="1.8"/>
+          <line x1="-27" y1="-27" x2="27" y2="27" stroke="#009EDB" stroke-width="1.4"/>
+          <line x1="-27" y1="27" x2="27" y2="-27" stroke="#009EDB" stroke-width="1.4"/>
+          <path d="M-44,10 C-52,-15 -36,-42 -12,-48" fill="none" stroke="#009EDB" stroke-width="4.5" stroke-linecap="round"/>
+          <path d="M44,10 C52,-15 36,-42 12,-48" fill="none" stroke="#009EDB" stroke-width="4.5" stroke-linecap="round"/>
+          <path d="M-38,26 C-22,45 22,45 38,26" fill="none" stroke="#009EDB" stroke-width="4" stroke-linecap="round"/>
+        </g>
+        <text x="122" y="42" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="800" fill="#000000">Naciones Unidas</text>
+        <text x="122" y="73" font-family="Inter, Arial, sans-serif" font-size="26" font-weight="500" fill="#000000">Oficina contra</text>
+        <text x="122" y="103" font-family="Inter, Arial, sans-serif" font-size="26" font-weight="500" fill="#000000">la Droga y el Delito</text>
+      </svg>`;
+      imgElement.src = "data:image/svg+xml;utf8," + encodeURIComponent(svgLogo);
+    }
+
+    function loadCustomLogo(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        document.getElementById('unodcLogoImg').src = e.target.result;
+        document.getElementById('currentLogoPath').textContent = "D:\\UNODC\\logo\\" + file.name;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // =========================================================================
+    // 2. BASE DE DATOS ÍNTEGRA: 100% DE LAS 41 METAS Y 17 OUTCOMES
+    // =========================================================================
+    const outcomesData17 = [
+      { code: '1.1', pCode: 'P1', label: '1.1 Presupuesto y Reportes', val: 60 },
+      { code: '1.2', pCode: 'P1', label: '1.2 Portafolio y Fondos UE', val: 98 },
+      { code: '1.3', pCode: 'P1', label: '1.3 Alineación UNSDCF/CCA', val: 71 },
+      { code: '1.4', pCode: 'P1', label: '1.4 Programación Integrada', val: 67 },
+      { code: '1.5', pCode: 'P1', label: '1.5 Género, Discap. y PSEA', val: 100 },
+      { code: '2.1', pCode: 'P2', label: '2.1 Visión Regional LAC', val: 200 },
+      { code: '2.2', pCode: 'P2', label: '2.2 Cooperación Sur-Sur', val: 100 },
+      { code: '2.3', pCode: 'P2', label: '2.3 Trabajo Conjunto SNU', val: 50 },
+      { code: '2.4', pCode: 'P2', label: '2.4 Contribuciones PSB', val: 0 },
+      { code: '2.5', pCode: 'P2', label: '2.5 Asistencia Téc. Drogas', val: 72 },
+      { code: '2.6', pCode: 'P2', label: '2.6 Alianzas Púb-Privadas', val: 83 },
+      { code: '2.7', pCode: 'P2', label: '2.7 Visibilidad y Eventos', val: 137 },
+      { code: '3.1', pCode: 'P3', label: '3.1 Desempeño Personal', val: 68 },
+      { code: '3.2', pCode: 'P3', label: '3.2 Operaciones y Manuales', val: 125 },
+      { code: '3.3', pCode: 'P3', label: '3.3 Clima y Ombudsman', val: 62 },
+      { code: '3.4', pCode: 'P3', label: '3.4 Oficinas y Flota Activos', val: 45 },
+      { code: '3.5', pCode: 'P3', label: '3.5 Evaluación (BOLAB4)', val: 100 }
+    ];
+
+    const all41Indicators = [
+      // PILAR 1: GESTIÓN Y DESARROLLO PROGRAMÁTICO (14 INDICADORES)
+      { id: '1.1.1', pCode: 'P1', pillar: 'Gestión Programática', outcome: '1.1 Implementación y Presupuesto', name: 'Ejecución financiera anual (Delivery) durante 2025', target: '$4.10M Portal ($4.50M Orig.)', actual: '$3,700,358 USD', pct: 89, status: 'En Progreso', unit: 'Unidad de Finanzas / Monitoreo — Reporte Umoja preliminar (90% Portal / 82% Original)' },
+      { id: '1.1.2', pCode: 'P1', pillar: 'Gestión Programática', outcome: '1.1 Implementación y Presupuesto', name: 'Al menos 1 reunión del Comité de Gobernanza del Programa (PGC) con contrapartes', target: '1 Reunión', actual: '0 (Reprog. S1-2026)', pct: 0, status: 'No Iniciado', unit: 'Representación / Monitoreo — Pospuesto por elecciones presidenciales y transición de gobierno' },
+      { id: '1.1.3', pCode: 'P1', pillar: 'Gestión Programática', outcome: '1.1 Implementación y Presupuesto', name: 'Cumplimiento oportuno de reportes internos y externos (Donantes, Gobierno, APPR)', target: '40 Informes', actual: '36 / 40 Informes', pct: 95, status: 'Completado', unit: 'Coordinaciones de Proyecto — APPR 100% (11/11), Gob 100% (6/6), Donantes 91% (10/11), Fin. 75% (9/12)' },
+      { id: '1.2.1', pCode: 'P1', pillar: 'Gestión Programática', outcome: '1.2 Portafolio de Proyectos', name: 'Al menos 10 propuestas de proyecto elaboradas y presentadas a donantes', target: '10 Propuestas', actual: '8 Presentadas', pct: 80, status: 'En Progreso', unit: 'Puntos Focales Técnicos — Minería ilegal, VBG, Drogas sintéticas, GAFI, Control Drogas, Justicia Andina, Café y Cacao' },
+      { id: '1.2.2', pCode: 'P1', pillar: 'Gestión Programática', outcome: '1.2 Portafolio de Proyectos', name: 'Nuevos acuerdos de financiamiento firmados por al menos USD 4,000,000', target: '$4,000,000 USD', actual: '$4,694,836 USD', pct: 116, status: 'Completado', unit: 'Gerencia / Monitoreo — 2 Acuerdos NDICI-LA con UE: AML ($1.17M) y Control de Drogas ($3.52M)' },
+      { id: '1.3.1', pCode: 'P1', pillar: 'Gestión Programática', outcome: '1.3 Alineación UNSDCF 2023-2027', name: 'Co-liderazgo de 1 Resultado del UNSDCF sobre Estado de Derecho, Gobernanza y Seguridad', target: '1 Grupo Outcome', actual: 'Co-líder Grupo 7', pct: 100, status: 'Completado', unit: 'Coordinación RoL — Co-liderazgo Outcome 7 "Justicia, Clima de Paz y Democracia"' },
+      { id: '1.3.2', pCode: 'P1', pillar: 'Gestión Programática', outcome: '1.3 Alineación UNSDCF 2023-2027', name: 'Participación activa en equipos programáticos, temáticos y operativos del UNSDCF', target: '6 Grupos', actual: '5 Grupos Activos', pct: 83, status: 'Completado', unit: 'Puntos Focales — Aportes técnicos documentados en 5 de 6 grupos de resultados del SNU' },
+      { id: '1.3.3', pCode: 'P1', pillar: 'Gestión Programática', outcome: '1.3 Alineación UNSDCF 2023-2027', name: 'Inclusión de capítulo técnico UNODC en actualización del Common Country Assessment (CCA)', target: '1 Capítulo CCA', actual: 'Capítulo Incluido', pct: 100, status: 'Completado', unit: 'Unidad de Monitoreo — Capítulo sobre crimen organizado, narcotráfico y seguridad integrado en CCA 2025' },
+      { id: '1.4.1', pCode: 'P1', pillar: 'Gestión Programática', outcome: '1.4 Enfoque Programático Integrado', name: 'Implementación del Programa País para Bolivia con enfoque integrado y sistema M&E', target: '1 PRODOC BOLCP1', actual: 'En formulación IPMR', pct: 50, status: 'En Progreso', unit: 'Unidad MEAL / Gerencia — PRODOC BOLCP1 en diseño en IPMR para aprobación en 2026' },
+      { id: '1.4.2', pCode: 'P1', pillar: 'Gestión Programática', outcome: '1.4 Enfoque Programático Integrado', name: 'Liderazgo de al menos 1 grupo o plataforma de coordinación de cooperación internacional', target: '1 Plataforma', actual: '1 Co-liderada (GruS)', pct: 100, status: 'Completado', unit: 'Desarrollo Alternativo — Co-presidencia Subgrupo Desarrollo Productivo del GruS junto a GIZ' },
+      { id: '1.4.3', pCode: 'P1', pillar: 'Gestión Programática', outcome: '1.4 Enfoque Programático Integrado', name: 'Participación en redes y mesas técnicas para contribución a los ODS y normativa EUDR', target: '2 Redes/Mesas', actual: '2 Mesas Activas', pct: 100, status: 'Completado', unit: 'Puntos Focales — Submesa Geolocalización/Trazabilidad EUDR (con Swisscontact) y Consejo contra la Trata' },
+      { id: '1.5.1', pCode: 'P1', pillar: 'Gestión Programática', outcome: '1.5 Género, Discapacidad y PSEA', name: '100% de proyectos COBOL incorporan transversalización de género y discapacidad', target: '100% Proyectos', actual: '100% en IPMR', pct: 100, status: 'Completado', unit: 'Monitoreo / Puntos Focales — Incorporado en proyectos revisados/aprobados en IPMR (BOLEU1, BOLAB6, BOLV32)' },
+      { id: '1.5.2', pCode: 'P1', pillar: 'Gestión Programática', outcome: '1.5 Género, Discapacidad y PSEA', name: 'Diseño e implementación del Plan de Acción PSEA (Prevención Explotación y Abuso Sexual)', target: '1 Plan PSEA', actual: '1 Plan Activo', pct: 100, status: 'Completado', unit: 'Punto Focal PSEA — Plan 2025 en marcha, compromisos de liderazgo y canales de reporte socializados' },
+      { id: '1.5.3', pCode: 'P1', pillar: 'Gestión Programática', outcome: '1.5 Género, Discapacidad y PSEA', name: 'Jornadas de capacitación al personal en Género, Discapacidad y Prevención del Acoso', target: '3 Talleres', actual: '3 Realizados', pct: 100, status: 'Completado', unit: 'Puntos Focales — Talleres Discapacidad (18 Sep), PSEA (9 Oct), Género (9 Dic) + inclusión laboral' },
+
+      // PILAR 2: CONSTRUCCIÓN DE ALIANZAS Y VISIBILIDAD (15 INDICADORES)
+      { id: '2.1.1', pCode: 'P2', pillar: 'Construcción Alianzas', outcome: '2.1 Visión Estratégica LAC', name: 'Participación en formulación/implementación de iniciativas regionales bajo Visión LAC', target: '1 Iniciativa', actual: '2 Proyectos Reg.', pct: 200, status: 'Completado', unit: 'Gerencia / Programas — Proyecto Regional Andino ROCOL y Proyecto Tráfico de Migrantes CAN-BID' },
+      { id: '2.2.1', pCode: 'P2', pillar: 'Construcción Alianzas', outcome: '2.2 Cooperación Sur-Sur', name: 'Nuevas iniciativas técnicas lanzadas e implementadas bajo Cooperación Sur-Sur', target: '2 Iniciativas', actual: '2 Implementadas', pct: 100, status: 'Completado', unit: 'Coordinaciones — Acuerdo Equipo Conjunto Investigación (JIT Fiscalías Bolivia-Perú) y adaptación PECAT-PREVER' },
+      { id: '2.3.1', pCode: 'P2', pillar: 'Construcción Alianzas', outcome: '2.3 Trabajo Conjunto SNU', name: 'Participación constante en reuniones del UNCT y eventos inter-agenciales del SNU', target: '100% Reuniones', actual: 'Participación Plena', pct: 100, status: 'Completado', unit: 'Representación / Operaciones — Participación activa en todas las sesiones de UNCT y eventos SNU' },
+      { id: '2.3.2', pCode: 'P2', pillar: 'Construcción Alianzas', outcome: '2.3 Trabajo Conjunto SNU', name: 'Al menos 2 propuestas conjuntas formuladas en coordinación con otras agencias ONU', target: '2 Propuestas', actual: '1 Conjunta (ONUSIDA)', pct: 50, status: 'En Progreso', unit: 'Coordinaciones — Plan Conjunto ONU sobre SIDA 2024-2025 (con UNICEF, PNUD, UNFPA, ONU Mujeres, OMS)' },
+      { id: '2.4.1', pCode: 'P2', pillar: 'Construcción Alianzas', outcome: '2.4 Alianza Estratégica con el PSB', name: 'Recaudación oportuna de la contribución anual regular 2024 del Estado Plurinacional', target: '1 Aporte (2024)', actual: 'Se cobró 2023 ($250K)', pct: 0, status: 'No Iniciado', unit: 'Representación — En Dic 2025 el Gobierno desembolsó $250,000 USD equiv. de 2023; 2024 previsto para 2026' },
+      { id: '2.4.2', pCode: 'P2', pillar: 'Construcción Alianzas', outcome: '2.4 Alianza Estratégica con el PSB', name: 'Recaudación oportuna de la contribución anual regular 2025 del Estado Plurinacional', target: '1 Aporte (2025)', actual: 'En gestión Cancillería', pct: 0, status: 'No Iniciado', unit: 'Representación — Gestiones de seguimiento con Cancillería para desembolso en 2026/2027' },
+      { id: '2.5.1', pCode: 'P2', pillar: 'Construcción Alianzas', outcome: '2.5 Asistencia Técnica en Drogas', name: 'Iniciativa de monitoreo tecnológico de destrucción de laboratorios de droga diseñada', target: '1 Iniciativa Tec.', actual: 'Financiada en Drogas III', pct: 25, status: 'En Progreso', unit: 'Proyecto Control Drogas — Incorporada y financiada bajo nuevo proyecto UE (€3.0M); en definición técnica' },
+      { id: '2.5.2', pCode: 'P2', pillar: 'Construcción Alianzas', outcome: '2.5 Asistencia Técnica en Drogas', name: 'Al menos 80% de validación UNODC en destrucción de drogas incautadas en el país', target: '80.0% Validación', actual: '93.6% (50.97 Tn)', pct: 117, status: 'Completado', unit: 'Proyecto Control Drogas — Superada la meta anual con 50.97 toneladas de drogas incautadas validadas' },
+      { id: '2.5.3', pCode: 'P2', pillar: 'Construcción Alianzas', outcome: '2.5 Asistencia Técnica en Drogas', name: 'Participación y co-liderazgo en al menos 2 sesiones del Grupo Mini Dublín / Grupo Drogas', target: '2 Sesiones', actual: '2 Co-lideradas', pct: 100, status: 'Completado', unit: 'Coordinación Técnica — Sesiones de mayo y diciembre co-lideradas con reportes de tendencias criminales' },
+      { id: '2.6.1', pCode: 'P2', pillar: 'Construcción Alianzas', outcome: '2.6 Alianzas Público-Privadas', name: 'Al menos 1 Alianza Público-Privada (APP) apoyada y consolidada por COBOL', target: '1 Alianza APP', actual: '1 Consolidada (Malongo)', pct: 100, status: 'Completado', unit: 'Desarrollo Alternativo — Continuidad de alianza con Gobierno y Malongo para exportación de café de La Asunta' },
+      { id: '2.6.2', pCode: 'P2', pillar: 'Construcción Alianzas', outcome: '2.6 Alianzas Público-Privadas', name: 'Al menos 2 iniciativas productivas lideradas por mujeres y jóvenes implementadas', target: '2 Iniciativas', actual: '2 Ejecutadas', pct: 100, status: 'Completado', unit: 'Desarrollo Alternativo — Empresas de mujeres/jóvenes en La Asunta y alianza con CAMEX "Bolivia para el Mundo"' },
+      { id: '2.6.3', pCode: 'P2', pillar: 'Construcción Alianzas', outcome: '2.6 Alianzas Público-Privadas', name: 'Nuevas alianzas técnicas con entidades públicas/académicas para Desarrollo Alternativo', target: '2 Alianzas', actual: '1 En Diseño (UNIBOL)', pct: 50, status: 'En Progreso', unit: 'Desarrollo Alternativo — Reuniones con Universidad Indígena (UNIBOL) para escuelas de campo (1.5 ha y viveros)' },
+      { id: '2.7.1', pCode: 'P2', pillar: 'Construcción Alianzas', outcome: '2.7 Visibilidad y Comunicación', name: 'Plan Anual de Visibilidad y Comunicación actualizado e implementado para COBOL', target: '1 Plan Anual', actual: '1 Implementado', pct: 100, status: 'Completado', unit: 'Unidad de Comunicación — Plan 2025 ejecutado siguiendo directrices de visibilidad de UE y KOICA' },
+      { id: '2.7.2', pCode: 'P2', pillar: 'Construcción Alianzas', outcome: '2.7 Visibilidad y Comunicación', name: 'Al menos 5 eventos nacionales/internacionales de alto nivel organizados por COBOL', target: '5 Eventos', actual: '8 Eventos Realizados', pct: 160, status: 'Completado', unit: 'Comunicación / Proyectos — Firma JIT, Lanzamiento KOICA Yungas, Visita Embajadores UE, Informe Mundial Drogas, Informe Coca' },
+      { id: '2.7.3', pCode: 'P2', pillar: 'Construcción Alianzas', outcome: '2.7 Visibilidad y Comunicación', name: 'Al menos 2 historias de impacto humano publicadas en portales oficiales y prensa', target: '2 Historias', actual: '3 Publicadas', pct: 150, status: 'Completado', unit: 'Unidad de Comunicación — "Cultivating dreams" (Abr), "Memories in the Skies of Los Yungas" (Jul) y notas ABI/La Razón' },
+
+      // PILAR 3: GESTIÓN DE OFICINA (12 INDICADORES)
+      { id: '3.1.1', pCode: 'P3', pillar: 'Gestión de Oficina', outcome: '3.1 Gestión del Desempeño', name: 'Al menos 12 reuniones de coordinación con el personal (incluyendo Diálogo de Liderazgo)', target: '12 Reuniones', actual: '12 Realizadas', pct: 100, status: 'Completado', unit: 'Gerencia / Administración — 12 reuniones de seguimiento + sesiones de Leadership Dialogue en diciembre' },
+      { id: '3.1.2', pCode: 'P3', pillar: 'Gestión de Oficina', outcome: '3.1 Gestión del Desempeño', name: 'Cumplimiento del personal con los cursos mandatorios corporativos de Naciones Unidas', target: '100% Personal', actual: '88% Verificado', pct: 88, status: 'Completado', unit: 'Recursos Humanos — 88% con certificados verificados en repositorio (100% reportado en cierre sede)' },
+      { id: '3.1.3', pCode: 'P3', pillar: 'Gestión de Oficina', outcome: '3.1 Gestión del Desempeño', name: 'Planes anuales de trabajo (e-Performance) desarrollados y aprobados para todo el personal', target: '100% Planes', actual: '49% Aprobados en Sist.', pct: 49, status: 'En Progreso', unit: 'Supervisores / RRHH — Brecha administrativa en formalización documental que requiere acción de supervisores' },
+      { id: '3.2.1', pCode: 'P3', pillar: 'Gestión de Oficina', outcome: '3.2 Operaciones Eficientes', name: '100% del personal de nuevo ingreso recibe sesión formal de inducción (Onboarding)', target: '100% Nuevos (9)', actual: '100% Inducidos (9)', pct: 100, status: 'Completado', unit: 'Recursos Humanos — 3 sesiones híbridas impartidas a los 9 nuevos ingresos con envío de materiales a campo' },
+      { id: '3.2.2', pCode: 'P3', pillar: 'Gestión de Oficina', outcome: '3.2 Operaciones Eficientes', name: 'Mapas de procesos e instructivos de procedimientos internos actualizados e implementados', target: '2 Manuales', actual: '3 Instructivos (SOPs)', pct: 150, status: 'Completado', unit: 'Operaciones — Instructivos de Viajes Terrestres (Nov), Pagos y Cuentas (#11 Nov) y Conductores (#10 Jun)' },
+      { id: '3.3.1', pCode: 'P3', pillar: 'Gestión de Oficina', outcome: '3.3 Clima Laboral y Team-Building', name: 'Al menos 1 retiro o jornada de integración institucional organizada para el personal', target: '1 Actividad', actual: 'Almuerzo Jun (Retiro Q1)', pct: 100, status: 'Completado', unit: 'Administración — Almuerzo institucional en junio 2025; retiro general reprogramado a Q1-2026 tras cobro PSB' },
+      { id: '3.3.2', pCode: 'P3', pillar: 'Gestión de Oficina', outcome: '3.3 Clima Laboral y Team-Building', name: 'Personal de COBOL completa satisfactoriamente el curso "United to Respect"', target: '100% Personal', actual: '86.6% Verificado', pct: 87, status: 'Completado', unit: 'Recursos Humanos — Certificados recopilados en carpeta OneDrive de seguimiento' },
+      { id: '3.3.3', pCode: 'P3', pillar: 'Gestión de Oficina', outcome: '3.3 Clima Laboral y Team-Building', name: 'Sesiones de capacitación impartidas por la Oficina Regional del Ombudsman documentadas', target: '1 Evidencia Doc.', actual: 'Sin Respaldo Documental', pct: 0, status: 'No Iniciado', unit: 'Administración — Misión presencial y virtual realizada, pero pendiente de evidencia documental en carpeta' },
+      { id: '3.4.1', pCode: 'P3', pillar: 'Gestión de Oficina', outcome: '3.4 Oficinas de Terreno y Activos', name: 'Habilitación y puesta en operación de 2 nuevas oficinas de terreno', target: '2 Oficinas', actual: '1 Operativa (La Asunta)', pct: 50, status: 'Completado', unit: 'Operaciones / Campo — Oficina de La Asunta habilitada con servicios y cómputo; compra de motos en cierre' },
+      { id: '3.4.2', pCode: 'P3', pillar: 'Gestión de Oficina', outcome: '3.4 Oficinas de Terreno y Activos', name: '100% de activos y propiedades de COBOL registrados y etiquetados con código de barras', target: '100% Inventario', actual: '85.7% Etiquetado', pct: 86, status: 'Completado', unit: 'Unidad de Activos — 86% de inventario conciliado con código de barras; conclusión prevista en 2026' },
+      { id: '3.4.3', pCode: 'P3', pillar: 'Gestión de Oficina', outcome: '3.4 Oficinas de Terreno y Activos', name: '100% de vehículos que no son utilizados por COBOL transferidos/donados formalmente', target: '23 Vehículos', actual: '4 Listos / 19 en Trámite', pct: 17, status: 'No Iniciado', unit: 'Operaciones / Umoja — De 23 unidades: 4 con baja Umoja lista, 4 en Aduana, 13 obsoletos, 2 con obs. legal' },
+      { id: '3.5.1', pCode: 'P3', pillar: 'Gestión de Oficina', outcome: '3.5 Evaluación y Aprendizaje', name: 'Implementación y cierre de recomendaciones derivadas de evaluaciones independientes', target: '6 Recomendaciones', actual: '6 Integradas (BOLAB4)', pct: 100, status: 'Completado', unit: 'Monitoreo y Evaluación — Recomendaciones de evaluación externa BOLAB4 integradas (registros digitales ante rotación)' }
+    ];
+
+    // =========================================================================
+    // 3. INICIALIZACIÓN Y CONMUTADORES DINÁMICOS DE LOS 6 GRÁFICOS
+    // =========================================================================
+    Chart.defaults.font.family = "'Inter', sans-serif";
+    Chart.defaults.color = "#475569";
+
+    let chart1Instance, chart2Instance, chart3Instance, chart4Instance, chart5Instance, chart6Instance;
+    let currentOutcomesPillarFilter = 'ALL';
+    let currentOutcomesSortMode = 'ORDER';
+
+    function getThemeTextColor() {
+      return document.documentElement.getAttribute('data-theme') === 'dark' ? '#E2E8F0' : '#0F172A';
+    }
+    function getThemeSubtleColor() {
+      return document.documentElement.getAttribute('data-theme') === 'dark' ? '#94A3B8' : '#64748B';
+    }
+    function getThemeGridColor() {
+      return document.documentElement.getAttribute('data-theme') === 'dark' ? '#1E3A5F' : '#F1F5F9';
+    }
+
+    // --- CHART 1: FINANZAS ($M vs % Cumplimiento) ---
+    function initChart1(mode = 'USD') {
+      const ctx = document.getElementById('chartFinancialBullet').getContext('2d');
+      if (chart1Instance) chart1Instance.destroy();
+
+      const isUSD = mode === 'USD';
+      const labels = [
+        'Ejecución (vs. Meta Original)',
+        'Ejecución (vs. Budget Portal)',
+        'Nuevos Acuerdos Firmados (UE)'
+      ];
+
+      const datasets = isUSD
+        ? [
+            {
+              label: 'Meta Comprometida (USD M)',
+              data: [4.50, 4.10, 4.00],
+              backgroundColor: '#CBD5E1',
+              borderRadius: 4,
+              barPercentage: 0.72,
+              categoryPercentage: 0.78
+            },
+            {
+              label: 'Logro Real 2025 (USD M)',
+              data: [3.70, 3.70, 4.69],
+              backgroundColor: ['#D97706', '#009EDB', '#0D9488'],
+              borderRadius: 4,
+              barPercentage: 0.72,
+              categoryPercentage: 0.78
+            }
+          ]
+        : [
+            {
+              label: 'Meta Base (100%)',
+              data: [100, 100, 100],
+              backgroundColor: '#CBD5E1',
+              borderRadius: 4,
+              barPercentage: 0.72,
+              categoryPercentage: 0.78
+            },
+            {
+              label: '% de Cumplimiento Alcanzado',
+              data: [82.2, 90.2, 117.4],
+              backgroundColor: ['#D97706', '#009EDB', '#0D9488'],
+              borderRadius: 4,
+              barPercentage: 0.72,
+              categoryPercentage: 0.78
+            }
+          ];
+
+      chart1Instance = new Chart(ctx, {
+        type: 'bar',
+        data: { labels, datasets },
+        options: {
+          indexAxis: 'y',
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'top',
+              align: 'start',
+              labels: { boxWidth: 12, font: { size: 11, weight: '600' }, color: getThemeTextColor() }
+            },
+            datalabels: {
+              anchor: 'end',
+              align: 'right',
+              formatter: (val, c) => {
+                if (isUSD) {
+                  if (c.datasetIndex === 0) return `$${val.toFixed(2)}M`;
+                  const pcts = ['82%', '89%', '116%'];
+                  return `$${val.toFixed(2)}M (${pcts[c.dataIndex]})`;
+                } else {
+                  return `${val.toFixed(1)}%`;
+                }
+              },
+              font: { size: 10.5, weight: '700' },
+              color: (c) => c.datasetIndex === 0 ? getThemeSubtleColor() : getThemeTextColor()
+            }
+          },
+          scales: {
+            x: {
+              max: isUSD ? 5.6 : 140,
+              grid: { color: getThemeGridColor() },
+              ticks: {
+                callback: (v) => isUSD ? `$${v}M` : `${v}%`,
+                font: { size: 10 },
+                color: getThemeSubtleColor()
+              }
+            },
+            y: {
+              grid: { display: false },
+              ticks: { font: { size: 11, weight: '600' }, color: getThemeTextColor() }
+            }
+          }
+        }
+      });
+    }
+
+    function switchChart1View(mode, btnEl) {
+      btnEl.parentElement.querySelectorAll('.sw-btn').forEach(b => b.classList.remove('active'));
+      btnEl.classList.add('active');
+      initChart1(mode);
+    }
+
+    // --- CHART 2: PILARES (% Proporción vs N° Indicadores) ---
+    function initChart2(mode = 'PCT') {
+      const ctx = document.getElementById('chartPillarStacked').getContext('2d');
+      if (chart2Instance) chart2Instance.destroy();
+
+      const isPct = mode === 'PCT';
+      const labels = [
+        'Pilar 1: Gestión Programática (14)',
+        'Pilar 2: Construcción Alianzas (15)',
+        'Pilar 3: Gestión de Oficina (12)',
+        'TOTAL WORKPLAN COBOL (41)'
+      ];
+
+      chart2Instance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [
+            {
+              label: 'Completado',
+              data: isPct ? [78.6, 66.7, 83.3, 75.6] : [11, 10, 10, 31],
+              rawCounts: [11, 10, 10, 31],
+              rawPcts: [78.6, 66.7, 83.3, 75.6],
+              backgroundColor: '#0077B6',
+              borderRadius: 3
+            },
+            {
+              label: 'En Progreso / Parcial',
+              data: isPct ? [14.3, 13.3, 8.3, 12.2] : [2, 2, 1, 5],
+              rawCounts: [2, 2, 1, 5],
+              rawPcts: [14.3, 13.3, 83, 12.2],
+              backgroundColor: '#F59E0B',
+              borderRadius: 3
+            },
+            {
+              label: 'No Iniciado / Reprogramado',
+              data: isPct ? [7.1, 20.0, 8.3, 12.2] : [1, 3, 1, 5],
+              rawCounts: [1, 3, 1, 5],
+              rawPcts: [7.1, 20.0, 8.3, 12.2],
+              backgroundColor: '#DC2626',
+              borderRadius: 3
+            }
+          ]
+        },
+        options: {
+          indexAxis: 'y',
+          responsive: true,
+          maintainAspectRatio: false,
+          onClick: (evt, elements) => {
+            if (!elements.length) return;
+            const idx = elements[0].index;
+            const mapCodes = ['P1', 'P2', 'P3', 'ALL'];
+            const code = mapCodes[idx];
+            applyGlobalCommand(code, document.getElementById('cmd-' + code));
+          },
+          plugins: {
+            legend: {
+              position: 'top',
+              align: 'start',
+              labels: { boxWidth: 12, font: { size: 11, weight: '600' }, color: getThemeTextColor() }
+            },
+            datalabels: {
+              color: '#FFFFFF',
+              font: { size: 10, weight: '700' },
+              formatter: (val, c) => {
+                const count = c.dataset.rawCounts[c.dataIndex];
+                const pct = c.dataset.rawPcts[c.dataIndex];
+                if (isPct) return val >= 8 ? `${val.toFixed(0)}% (${count})` : '';
+                return count >= 1 ? `${count}` : '';
+              }
+            }
+          },
+          scales: {
+            x: {
+              stacked: true,
+              max: isPct ? 100 : 41,
+              grid: { display: false },
+              ticks: {
+                callback: (v) => isPct ? `${v}%` : `${v}`,
+                font: { size: 10 },
+                color: getThemeSubtleColor()
+              }
+            },
+            y: {
+              stacked: true,
+              grid: { display: false },
+              ticks: { font: { size: 11, weight: '600' }, color: getThemeTextColor() }
+            }
+          }
+        }
+      });
+    }
+
+    function switchChart2View(mode, btnEl) {
+      btnEl.parentElement.querySelectorAll('.sw-btn').forEach(b => b.classList.remove('active'));
+      btnEl.classList.add('active');
+      initChart2(mode);
+    }
+
+    // --- CHART 3: LOS 17 OUTCOMES (Orden 1.1->3.5, Ranking, Solo Brechas, y Filtro por Pilar) ---
+    function initChart3() {
+      const ctx = document.getElementById('chartOutcomes17').getContext('2d');
+      if (chart3Instance) chart3Instance.destroy();
+
+      let items = [...outcomesData17];
+      if (currentOutcomesPillarFilter === 'P1' || currentOutcomesPillarFilter === 'P2' || currentOutcomesPillarFilter === 'P3') {
+        items = items.filter(o => o.pCode === currentOutcomesPillarFilter);
+      } else if (currentOutcomesPillarFilter === 'ALERT') {
+        items = items.filter(o => o.val < 80);
+      }
+
+      if (currentOutcomesSortMode === 'RANK') {
+        items.sort((a, b) => b.val - a.val);
+      } else if (currentOutcomesSortMode === 'GAPS') {
+        items = items.filter(o => o.val < 80).sort((a, b) => a.val - b.val);
+      }
+
+      document.getElementById('outcomesCountFooter').textContent = `${items.length} Outcomes Mostrados`;
+
+      const labels = items.map(i => i.label);
+      const values = items.map(i => i.val);
+      const colors = values.map(v => {
+        if (v >= 100) return '#0D9488';
+        if (v >= 75) return '#009EDB';
+        if (v >= 55) return '#D97706';
+        return '#DC2626';
+      });
+
+      chart3Instance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [{
+            label: '% Avance del Outcome',
+            data: values,
+            backgroundColor: colors,
+            borderRadius: 3,
+            barPercentage: 0.78
+          }]
+        },
+        options: {
+          indexAxis: 'y',
+          responsive: true,
+          maintainAspectRatio: false,
+          onClick: (evt, elements) => {
+            if (!elements.length) return;
+            const clickedItem = items[elements[0].index];
+            document.getElementById('tableSearch').value = clickedItem.code;
+            searchTable();
+            document.getElementById('matrixSection').scrollIntoView({ behavior: 'smooth' });
+          },
+          plugins: {
+            legend: { display: false },
+            datalabels: {
+              anchor: 'end',
+              align: 'right',
+              formatter: (v) => `${v}%`,
+              font: { size: 9.5, weight: '700' },
+              color: getThemeTextColor()
+            }
+          },
+          scales: {
+            x: {
+              max: 225,
+              grid: { color: getThemeGridColor() },
+              ticks: { callback: (v) => `${v}%`, font: { size: 9.5 }, color: getThemeSubtleColor() }
+            },
+            y: {
+              grid: { display: false },
+              ticks: { font: { size: 9.8, weight: '600' }, color: getThemeTextColor() }
+            }
+          }
+        }
+      });
+    }
+
+    function switchChart3View(mode, btnEl) {
+      btnEl.parentElement.querySelectorAll('.sw-btn').forEach(b => b.classList.remove('active'));
+      btnEl.classList.add('active');
+      currentOutcomesSortMode = mode;
+      initChart3();
+    }
+
+    // --- CHART 4: EXTREMOS DE DESEMPEÑO (Todos, Sobrecumplimientos, Cuellos de Botella) ---
+    const extremesRaw = [
+      { label: '2.1.1 Iniciativas Regionales LAC (2/1)', val: 200 },
+      { label: '2.7.2 Eventos Alto Nivel (8/5)', val: 160 },
+      { label: '3.2.2 Manuales Operativos (3/2)', val: 150 },
+      { label: '2.7.3 Historias de Impacto Web (3/2)', val: 150 },
+      { label: '2.5.2 Validación Destrucción Drogas (93.6%)', val: 117 },
+      { label: '1.2.2 Nuevos Acuerdos UE ($4.69M/$4M)', val: 116 },
+      { label: '3.1.3 Planes e-Performance Aprobados', val: 49 },
+      { label: '3.4.3 Vehículos en Desuso Donados (4/23)', val: 17 },
+      { label: '2.4.2 Contribución Estatal PSB 2025', val: 0 },
+      { label: '1.1.2 Reunión Comité Gobernanza (PGC)', val: 0 }
+    ];
+
+    function initChart4(mode = 'ALL') {
+      const ctx = document.getElementById('chartVarianceExtremes').getContext('2d');
+      if (chart4Instance) chart4Instance.destroy();
+
+      let filtered = [...extremesRaw];
+      if (mode === 'OVER') filtered = filtered.filter(i => i.val >= 100);
+      if (mode === 'BOTTLENECK') filtered = filtered.filter(i => i.val < 50);
+
+      const vals = filtered.map(i => i.val);
+
+      chart4Instance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: filtered.map(i => i.label),
+          datasets: [{
+            label: '% de Logro respecto a la Meta',
+            data: vals,
+            backgroundColor: vals.map(v => v >= 100 ? '#0077B6' : (v > 0 ? '#D97706' : '#DC2626')),
+            borderRadius: 4,
+            barPercentage: 0.72
+          }]
+        },
+        options: {
+          indexAxis: 'y',
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            datalabels: {
+              anchor: 'end',
+              align: 'right',
+              formatter: (v) => `${v}%`,
+              font: { size: 10, weight: '700' },
+              color: (c) => vals[c.dataIndex] >= 100 ? '#009EDB' : '#EF4444'
+            }
+          },
+          scales: {
+            x: {
+              max: 230,
+              grid: { color: getThemeGridColor() },
+              ticks: { callback: (v) => `${v}%`, font: { size: 10 }, color: getThemeSubtleColor() }
+            },
+            y: {
+              grid: { display: false },
+              ticks: { font: { size: 10, weight: '600' }, color: getThemeTextColor() }
+            }
+          }
+        }
+      });
+    }
+
+    function switchChart4View(mode, btnEl) {
+      btnEl.parentElement.querySelectorAll('.sw-btn').forEach(b => b.classList.remove('active'));
+      btnEl.classList.add('active');
+      initChart4(mode);
+    }
+
+    // --- CHART 5: CUMPLIMIENTO DE REPORTES 1.1.3 (36/40 INFORMES) ---
+    function initChart5(mode = 'PCT') {
+      const ctx = document.getElementById('chartReportingCompliance').getContext('2d');
+      if (chart5Instance) chart5Instance.destroy();
+
+      const isPct = mode === 'PCT';
+      const labels = [
+        'Reportes Anuales APPR (11/11)',
+        'Informes a Gobierno (6/6)',
+        'Informes a Donantes (10/11)',
+        'Financieros Certificados (9/12)'
+      ];
+
+      chart5Instance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [
+            {
+              label: isPct ? 'Entregados a Tiempo (%)' : 'Informes Presentados',
+              data: isPct ? [100, 100, 90.9, 75.0] : [11, 6, 10, 9],
+              backgroundColor: ['#0D9488', '#0D9488', '#009EDB', '#D97706'],
+              borderRadius: 5,
+              barPercentage: 0.62
+            },
+            {
+              label: isPct ? 'Brecha Pendiente (%)' : 'Informes Pendientes',
+              data: isPct ? [0, 0, 9.1, 25.0] : [0, 0, 1, 3],
+              backgroundColor: '#CBD5E1',
+              borderRadius: 5,
+              barPercentage: 0.62
+            }
+          ]
+        },
+        options: {
+          indexAxis: 'y',
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'top',
+              align: 'start',
+              labels: { boxWidth: 12, font: { size: 10.5, weight: '600' }, color: getThemeTextColor() }
+            },
+            datalabels: {
+              color: (c) => c.datasetIndex === 0 ? '#FFFFFF' : '#475569',
+              font: { size: 10.5, weight: '700' },
+              formatter: (v) => {
+                if (isPct) return v > 5 ? `${v.toFixed(0)}%` : '';
+                return v > 0 ? `${v} inf.` : '';
+              }
+            }
+          },
+          scales: {
+            x: {
+              stacked: true,
+              max: isPct ? 100 : 12,
+              grid: { display: false },
+              ticks: {
+                callback: (v) => isPct ? `${v}%` : `${v}`,
+                font: { size: 10 },
+                color: getThemeSubtleColor()
+              }
+            },
+            y: {
+              stacked: true,
+              grid: { display: false },
+              ticks: { font: { size: 10.5, weight: '600' }, color: getThemeTextColor() }
+            }
+          }
+        }
+      });
+    }
+
+    function switchChart5View(mode, btnEl) {
+      btnEl.parentElement.querySelectorAll('.sw-btn').forEach(b => b.classList.remove('active'));
+      btnEl.classList.add('active');
+      initChart5(mode);
+    }
+
+    // --- CHART 6: FLOTA VEHICULAR 3.4.3 (23 UNIDADES - BARRAS VS DONUT) ---
+    function initChart6(typeMode = 'BAR') {
+      const ctx = document.getElementById('chartVehiclesBreakdown').getContext('2d');
+      if (chart6Instance) chart6Instance.destroy();
+
+      const isBar = typeMode === 'BAR';
+      const labels = [
+        'Rechazados por Obsolescencia (Baja Final)',
+        'Listos para Entrega (Baja Umoja OK)',
+        'En Trámite de Ingreso a Aduana',
+        'Observaciones Legales (Clonación)'
+      ];
+      const dataVals = [13, 4, 4, 2];
+      const colors = ['#D97706', '#0D9488', '#009EDB', '#DC2626'];
+
+      chart6Instance = new Chart(ctx, {
+        type: isBar ? 'bar' : 'doughnut',
+        data: {
+          labels,
+          datasets: [{
+            label: 'N° de Vehículos',
+            data: dataVals,
+            backgroundColor: colors,
+            borderRadius: isBar ? 5 : 0,
+            barPercentage: 0.65,
+            borderWidth: isBar ? 0 : 2,
+            borderColor: document.documentElement.getAttribute('data-theme') === 'dark' ? '#0F1E36' : '#FFFFFF'
+          }]
+        },
+        options: isBar
+          ? {
+              indexAxis: 'y',
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: { display: false },
+                datalabels: {
+                  anchor: 'end',
+                  align: 'right',
+                  formatter: (v) => `${v} unid. (${((v / 23) * 100).toFixed(0)}%)`,
+                  font: { size: 10.5, weight: '700' },
+                  color: getThemeTextColor()
+                }
+              },
+              scales: {
+                x: {
+                  max: 17,
+                  grid: { color: getThemeGridColor() },
+                  ticks: { stepSize: 4, font: { size: 10 }, color: getThemeSubtleColor() }
+                },
+                y: {
+                  grid: { display: false },
+                  ticks: { font: { size: 10.5, weight: '600' }, color: getThemeTextColor() }
+                }
+              }
+            }
+          : {
+              responsive: true,
+              maintainAspectRatio: false,
+              cutout: '62%',
+              plugins: {
+                legend: {
+                  position: 'right',
+                  labels: { boxWidth: 12, font: { size: 10, weight: '600' }, color: getThemeTextColor() }
+                },
+                datalabels: {
+                  color: '#FFFFFF',
+                  font: { size: 10.5, weight: '800' },
+                  formatter: (v) => `${v} (${((v / 23) * 100).toFixed(0)}%)`
+                }
+              }
+            }
+      });
+    }
+
+    function switchChart6View(mode, btnEl) {
+      btnEl.parentElement.querySelectorAll('.sw-btn').forEach(b => b.classList.remove('active'));
+      btnEl.classList.add('active');
+      initChart6(mode);
+    }
+
+    // =========================================================================
+    // 4. INTERACTIVIDAD GLOBAL: COMANDOS, TARJETAS KPI, TABLA Y MODAL
+    // =========================================================================
+    let currentFilter = 'ALL';
+
+    function renderIndicatorsTable() {
+      const tbody = document.getElementById('indicatorsTableBody');
+      const query = (document.getElementById('tableSearch').value || '').toLowerCase();
+
+      const filtered = all41Indicators.filter(item => {
+        const matchFilter =
+          currentFilter === 'ALL' ||
+          (currentFilter === 'DONE' && item.status === 'Completado') ||
+          (currentFilter === 'ALERT' && item.status !== 'Completado') ||
+          item.pCode === currentFilter;
+
+        const matchSearch =
+          item.id.toLowerCase().includes(query) ||
+          item.name.toLowerCase().includes(query) ||
+          item.outcome.toLowerCase().includes(query) ||
+          item.unit.toLowerCase().includes(query);
+
+        return matchFilter && matchSearch;
+      });
+
+      document.getElementById('matrixCountBadge').textContent = `(Mostrando ${filtered.length} de 41 metas)`;
+
+      tbody.innerHTML = filtered.map(item => {
+        const pTagClass = item.pCode === 'P1' ? 'p-prog' : (item.pCode === 'P2' ? 'p-part' : 'p-mgmt');
+        const stClass = item.status === 'Completado' ? 'st-done' : (item.status === 'En Progreso' ? 'st-prog' : 'st-none');
+        const barColor = item.pct >= 100 ? '#0D9488' : (item.pct >= 75 ? '#009EDB' : (item.pct > 0 ? '#D97706' : '#DC2626'));
+        const cappedWidth = Math.min(item.pct, 100);
+
+        return `
+          <tr>
+            <td><strong>${item.id}</strong></td>
+            <td><span class="pillar-tag ${pTagClass}">${item.pillar}</span></td>
+            <td style="font-weight:600;">${item.outcome}</td>
+            <td>${item.name}</td>
+            <td style="color:var(--text-light); font-weight:600;">${item.target}</td>
+            <td style="font-weight:700;">${item.actual}</td>
+            <td>
+              <div class="sparkbar-wrap">
+                <div class="sparkbar-bg">
+                  <div class="sparkbar-fill" style="width:${cappedWidth}%; background:${barColor};"></div>
+                </div>
+                <span class="sparkbar-val" style="color:${barColor};">${item.pct}%</span>
+              </div>
+            </td>
+            <td><span class="status-badge ${stClass}">${item.status}</span></td>
+            <td style="color:var(--text-muted); font-size:0.74rem;">${item.unit}</td>
+            <td>
+              <button class="btn-row-inspect" onclick="openIndicatorModal('${item.id}')">🔍 Ficha</button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function filterTable(code, btnEl) {
+      currentFilter = code;
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      if (btnEl) btnEl.classList.add('active');
+      renderIndicatorsTable();
+    }
+
+    function searchTable() {
+      renderIndicatorsTable();
+    }
+
+    function applyGlobalCommand(code, btnEl) {
+      document.querySelectorAll('.command-bar .cmd-btn:not(.raci-toggle)').forEach(b => b.classList.remove('active'));
+      if (btnEl) btnEl.classList.add('active');
+
+      // Resaltar tarjetas KPI vinculadas al Pilar seleccionado
+      document.querySelectorAll('.kpi-card').forEach(card => {
+        card.classList.remove('dimmed', 'focused-card');
+        if (code !== 'ALL' && code !== 'ALERT') {
+          if (card.dataset.pillar === code || card.dataset.pillar === 'ALL') {
+            card.classList.add('focused-card');
+          } else {
+            card.classList.add('dimmed');
+          }
+        } else if (code === 'ALERT') {
+          if (card.classList.contains('alert') || card.classList.contains('warn')) {
+            card.classList.add('focused-card');
+          } else {
+            card.classList.add('dimmed');
+          }
+        }
+      });
+
+      // Filtrar el Gráfico 3 (17 Outcomes) dinámicamente
+      currentOutcomesPillarFilter = code;
+      initChart3();
+
+      // Sincronizar filtro de la matriz inferior de 41 indicadores
+      document.getElementById('tableSearch').value = '';
+      const tblBtn = document.getElementById('tblBtn-' + code) || document.getElementById('tblBtn-ALL');
+      filterTable(code, tblBtn);
+    }
+
+    function focusChartCard(cardId) {
+      document.querySelectorAll('.chart-card').forEach(c => c.classList.remove('pulse-highlight'));
+      const target = document.getElementById(cardId);
+      if (target) {
+        target.classList.add('pulse-highlight');
+        target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        setTimeout(() => target.classList.remove('pulse-highlight'), 2600);
+      }
+    }
+
+    function focusFromKPI(pillarCode, chartCardId, searchPrefix) {
+      const cmdBtn = document.getElementById('cmd-' + pillarCode);
+      applyGlobalCommand(pillarCode, cmdBtn);
+      if (searchPrefix) {
+        document.getElementById('tableSearch').value = searchPrefix;
+        searchTable();
+      }
+      focusChartCard(chartCardId);
+    }
+
+    function toggleGovernanceDrawer() {
+      const drawer = document.getElementById('governanceDrawer');
+      const btn = document.getElementById('raciToggleBtn');
+      drawer.classList.toggle('open');
+      btn.classList.toggle('active');
+    }
+
+    // --- MODAL DE FICHA DE INDICADOR ---
+    function openIndicatorModal(indId) {
+      const item = all41Indicators.find(i => i.id === indId);
+      if (!item) return;
+      document.getElementById('modalPillarKicker').textContent = `${item.pillar} • Código ${item.id}`;
+      document.getElementById('modalTitle').textContent = item.outcome;
+      document.getElementById('modalId').textContent = item.id;
+      document.getElementById('modalOutcome').textContent = item.outcome;
+      document.getElementById('modalTarget').textContent = item.target;
+      document.getElementById('modalActual').textContent = item.actual;
+      document.getElementById('modalPct').textContent = `${item.pct}% de avance medido`;
+      document.getElementById('modalStatus').textContent = item.status;
+      document.getElementById('modalDesc').textContent = item.name;
+      document.getElementById('modalUnit').textContent = item.unit;
+      document.getElementById('indicatorModal').classList.add('open');
+    }
+
+    function closeIndicatorModal() {
+      document.getElementById('indicatorModal').classList.remove('open');
+    }
+
+    function closeModalOnBackdrop(event) {
+      if (event.target.id === 'indicatorModal') closeIndicatorModal();
+    }
+
+    // --- EXPORTACIÓN CSV DE LA MATRIZ ---
+    function exportMatrixCSV() {
+      const headers = ['ID', 'Pilar', 'Outcome', 'Indicador_Meta_2025', 'Meta_Anual', 'Logro_2025', 'Porcentaje_Avance', 'Estado', 'Unidad_y_Evidencia_Anonimizada'];
+      const rows = all41Indicators.map(i => [
+        i.id,
+        `"${i.pillar}"`,
+        `"${i.outcome}"`,
+        `"${i.name.replace(/"/g, '""')}"`,
+        `"${i.target}"`,
+        `"${i.actual}"`,
+        `${i.pct}%`,
+        i.status,
+        `"${i.unit.replace(/"/g, '""')}"`
+      ]);
+      const csvContent = "\uFEFF" + [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'UNODC_COBOL_2025_41_Metas_Anonimizado.csv';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    // --- ANIMACIÓN DE CONTADORES Y BARRAS KPI ---
+    function animateKPICards() {
+      document.querySelectorAll('.kpi-progress-fill').forEach(bar => {
+        bar.style.width = '0%';
+        setTimeout(() => {
+          bar.style.width = bar.dataset.width;
+        }, 80);
+      });
+
+      document.querySelectorAll('.kpi-value[data-count]').forEach(el => {
+        const target = parseFloat(el.dataset.count);
+        const prefix = el.dataset.prefix || '';
+        const suffix = el.dataset.suffix || '';
+        const duration = 900;
+        const startTime = performance.now();
+
+        function step(now) {
+          const progress = Math.min((now - startTime) / duration, 1);
+          const eased = 1 - Math.pow(1 - progress, 3);
+          const current = (target * eased).toFixed(target % 1 === 0 ? 0 : (target < 10 ? 2 : 1));
+          el.textContent = `${prefix}${current}${suffix}`;
+          if (progress < 1) requestAnimationFrame(step);
+          else el.textContent = `${prefix}${target.toFixed(target < 10 ? 2 : 1)}${suffix}`;
+        }
+        requestAnimationFrame(step);
+      });
+    }
+
+    function resetAndAnimateDashboard() {
+      document.getElementById('tableSearch').value = '';
+      currentOutcomesSortMode = 'ORDER';
+      document.querySelectorAll('#cardOutcomes17 .sw-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById('btnOutOrder').classList.add('active');
+      applyGlobalCommand('ALL', document.getElementById('cmd-ALL'));
+      initChart1('USD');
+      initChart2('PCT');
+      initChart4('ALL');
+      initChart5('PCT');
+      initChart6('BAR');
+      animateKPICards();
+    }
+
+    function toggleExecutiveTheme() {
+      const htmlEl = document.documentElement;
+      const isDark = htmlEl.getAttribute('data-theme') === 'dark';
+      const nextTheme = isDark ? 'light' : 'dark';
+      htmlEl.setAttribute('data-theme', nextTheme);
+      document.getElementById('themeToggleBtn').textContent = nextTheme === 'dark' ? '☀️ Modo Claro Ejecutivo' : '🌙 Modo Oscuro Ejecutivo';
+      // Re-renderizar gráficos para adaptar colores de texto y grilla
+      initChart1('USD');
+      initChart2('PCT');
+      initChart3();
+      initChart4('ALL');
+      initChart5('PCT');
+      initChart6('BAR');
+    }
+
+    // Inicialización al cargar la página
+    window.addEventListener('DOMContentLoaded', () => {
+      initChart1('USD');
+      initChart2('PCT');
+      initChart3();
+      initChart4('ALL');
+      initChart5('PCT');
+      initChart6('BAR');
+      renderIndicatorsTable();
+      animateKPICards();
+    });
+  </script>
+</body>
+</html>
